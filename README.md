@@ -20,3 +20,6 @@ A chess-like online board game, with certain events being determined by chance.
 - [ ] Add turn tracker to front (define how)
 - [ ] Organize `*.py` into packages/modules
 - [x] Change `btn-warning`s to `btn-secondary`s; warnings can be left for movable enemy pieces
+
+### Useful information:
+* https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
