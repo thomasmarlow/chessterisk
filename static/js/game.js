@@ -200,7 +200,9 @@ const test_logger = (to_log) => {
 };
 
 $(document).ready(function() {
-    board_side = self_board_side()
+    board_side = get_board_side()
+    test_logger('heyy')
+    test_logger(['side after ready', board_side])
     self_generate_board_grid()
     test_logger(board_grid)
     test_logger(board_side == "red")
@@ -250,8 +252,9 @@ const board_square_set = (row, col, board_square_data) => {
     }
 }
 
-const self_board_side = () => {
-    return 'blue'
+const get_board_side = () => {
+    test_logger(['side', $('#board-main').attr('data-side')])
+    return $('#board-main').attr('data-side')
 }
 
 const self_generate_board_grid = () => {

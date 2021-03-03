@@ -16,3 +16,12 @@ def game(gameview_id):
     else:
         return flask.render_template('game.html')
 
+
+
+@app.route('/test/<side>', methods=['GET', 'POST'])
+def test(side):
+    if flask.request.method == 'POST':
+        return 'POST to game'
+    else:
+        return flask.render_template('game.html', side=side)
+
