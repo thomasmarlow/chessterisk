@@ -1,7 +1,6 @@
 # chessterisk
 A chess-like online board game, with RNG-based initial position and capturing efficacy.
 
-(the following needs to be updated)
 ### Looks, as of now:
 
 ![Getting somewhere](https://media.giphy.com/media/kucRgSSmSObdhqeh0N/giphy.gif)
