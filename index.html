@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Chanss</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="resources/css/game.css" rel="stylesheet">
+  
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">chanss.com</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">algo
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">otra cosa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">algo más</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">quién sabe</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div id="board-main" class="container" style="height: 85vh; padding-top: 10vh;">
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">2</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">1</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">7</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">4</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">3</button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">6</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">*</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">9</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">8</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-info board-ally-piece" style="height: 10vh; width: 10vh">5</button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">8</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">4</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">7</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">*</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-outline-secondary disabled board-empty-square" style="height: 10vh; width: 10vh"></button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">2</button>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">1</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">2</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">5</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">3</button>
+      </div>
+      <div class="col-auto m-0 p-1">
+        <button type="button" class="btn btn-danger board-enemy-piece" style="height: 10vh; width: 10vh">9</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.slim.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="resources/js/game.js"></script>
+
+</body>
+
+</html>
