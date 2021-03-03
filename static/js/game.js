@@ -251,7 +251,7 @@ const board_square_set = (row, col, board_square_data) => {
 }
 
 const self_board_side = () => {
-    return 'red'
+    return 'blue'
 }
 
 const self_generate_board_grid = () => {
