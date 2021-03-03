@@ -5,9 +5,9 @@ A chess-like online board game, with RNG-based initial position and capturing ef
 
 ![Getting somewhere](https://media.giphy.com/media/kucRgSSmSObdhqeh0N/giphy.gif)
 
-### Testing routes:
-- `/test/blue`: Test as blue
-- `/test/red`: Test as red
+### Test it yourself:
+- as red: https://chessterisk.herokuapp.com/test/red
+- as blue: https://chessterisk.herokuapp.com/test/red
 
 ### TODOs:
 - [ ] Flask server
