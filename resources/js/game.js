@@ -109,5 +109,5 @@ const test_logger = (to_log) => {
 };
 
 $(document).ready(function() {
-    # TODO
+    // TODO
 });
