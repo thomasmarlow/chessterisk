@@ -54,23 +54,95 @@ const board_select = (square_to_select) => {
     square_to_select.addClass('board-selected')
 };
 
+// const board_make_movable_squares_for = (selected_ally_piece) => {
+//     $('.board-empty-square').each(function () {
+//         if ($(this).hasClass('btn-outline-secondary')) {
+//             $(this).removeClass('btn-outline-secondary')
+//             $(this).removeClass('disabled')
+//             $(this).addClass('btn-secondary')
+//             $(this).addClass('board-movable-square')
+//         }
+//     });
+//     $('.board-enemy-piece').each(function () {
+//         if ($(this).hasClass(board_enemy_styling)) {
+//             $(this).removeClass(board_enemy_styling)
+//             $(this).addClass('btn-warning')
+//             $(this).addClass('board-movable-square')
+//         }
+//     });
+// };
+
 const board_make_movable_squares_for = (selected_ally_piece) => {
-    $('.board-empty-square').each(function () {
-        if ($(this).hasClass('btn-outline-secondary')) {
-            $(this).removeClass('btn-outline-secondary')
-            $(this).removeClass('disabled')
-            $(this).addClass('btn-secondary')
-            $(this).addClass('board-movable-square')
-        }
-    });
-    $('.board-enemy-piece').each(function () {
-        if ($(this).hasClass(board_enemy_styling)) {
-            $(this).removeClass(board_enemy_styling)
-            $(this).addClass('btn-warning')
-            $(this).addClass('board-movable-square')
-        }
-    });
+    let self_row = parseInt(selected_ally_piece.attr('id').split('-')[2])
+    let self_col = parseInt(selected_ally_piece.attr('id').split('-')[3])
+    test_logger({'row_parsed': self_row, 'col_parsed': self_col})
+    if (selected_ally_piece.text() == '♚') {
+        board_make_movable_squares_for_master(self_row, self_col)
+    } else {
+        board_make_movable_squares_for_numbered(self_row, self_col, parseInt(selected_ally_piece.text()))
+    }
 };
+
+const board_make_movable_squares_for_master = (self_row, self_col) => {
+    board_possible_moves_2s(self_row, self_col)
+    board_possible_moves_1d(self_row, self_col)
+}
+
+const board_make_movable_squares_for_numbered = (self_row, self_col, number) => {
+    test_logger(['is even', number, is_even(number)])
+    if (is_even(number)) {
+        board_possible_moves_1s(self_row, self_col)
+    } else {
+        board_possible_moves_1d(self_row, self_col)
+    }
+}
+
+const board_possible_moves_2s = (self_row, self_col) => {
+    board_movable_if_applies(self_row+2, self_col)
+    board_movable_if_applies(self_row-2, self_col)
+    board_movable_if_applies(self_row, self_col+2)
+    board_movable_if_applies(self_row, self_col-2)
+}
+
+const board_possible_moves_1s = (self_row, self_col) => {
+    board_movable_if_applies(self_row+1, self_col)
+    board_movable_if_applies(self_row-1, self_col)
+    board_movable_if_applies(self_row, self_col+1)
+    board_movable_if_applies(self_row, self_col-1)
+}
+
+const board_possible_moves_1d = (self_row, self_col) => {
+    board_movable_if_applies(self_row+1, self_col+1)
+    board_movable_if_applies(self_row+1, self_col-1)
+    board_movable_if_applies(self_row-1, self_col+1)
+    board_movable_if_applies(self_row-1, self_col-1)
+}
+
+
+const board_movable_if_applies = (row, col) => {
+    test_logger({row, col})
+    if (row < min_row || row >= max_row) return
+    if (col < min_col || col >= max_col) return
+    let square = $(`#board-square-${row}-${col}`)
+    test_logger(square)
+    if (square.hasClass('board-empty-square')) {
+        test_logger('in empty')
+        square.removeClass('btn-outline-secondary')
+        square.removeClass('disabled')
+        square.addClass('btn-secondary')
+        square.addClass('board-movable-square')
+    }
+    if (square.hasClass('board-enemy-piece')) {
+        test_logger('in enemy')
+        square.removeClass(board_enemy_styling)
+        square.addClass('btn-warning')
+        square.addClass('board-movable-square')
+    }
+}
+
+const is_even = (number) => {
+    return number % 2 == 0
+}
 
 $('#board-main').on('click', '.board-movable-square', function () {
     let selected_ally_piece = $('.board-selected')
