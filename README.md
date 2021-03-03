@@ -1,4 +1,4 @@
-# chanss
+# chessterisk
 A chess-like online board game, with certain events being determined by chance.
 
 ### For now
@@ -14,7 +14,9 @@ A chess-like online board game, with certain events being determined by chance.
 - [ ] Flask server
 	- [ ] `GET /home`: "new game" button
 	- [ ] `GET /newgame`: generate ID pair, redirect to game
-	- [ ] `/game/{id}`: game view
+	- [ ] `GET /game/{id}`: game view
+	- [ ] `POST /game/{id}`: game API
 	- [ ] Adapt existing domain to Flask interface
 - [ ] Add turn tracker to front (?)
 - [ ] Organize `*.py` into packages/modules
+- [ ] Change `btn-warning`s to `btn-secondary`s; warnings can be left for movable enemy pieces
