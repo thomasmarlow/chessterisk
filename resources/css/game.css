@@ -1,0 +1,6 @@
+.board-square {
+    height: 10vh;
+    width: 10vh;
+    font-size: 6vh;
+    line-height: 6vh
+}
