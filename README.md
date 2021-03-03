@@ -1,6 +1,7 @@
 # chessterisk
 A chess-like online board game, with certain events being determined by chance.
 
+(the following needs to be updated)
 ### Looks, as of now:
 
 ![Getting somewhere](https://media.giphy.com/media/E6KQ6vrBH6G9Ziwgvs/giphy.gif)
