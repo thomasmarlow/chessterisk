@@ -1,4 +1,4 @@
-# chessterisk
+# chessterisk*
 A chess-like online board game, with RNG-based initial position and capturing efficacy.
 
 ### Looks, as of now:
@@ -11,10 +11,12 @@ A chess-like online board game, with RNG-based initial position and capturing ef
 
 ### TODOs:
 - [ ] Adapt existing domain to server interface (organize `*.py` into packages/modules?)
+  - ...before implementing DB
+  - ...only runnable on local server with `threaded=False`
 - [ ] Add turn tracker to front (define how)
 - [ ] Integration with PostgresDB through SQLAlchemy
 - [ ] Add error views instead of redirecting to `/home`
-- [ ] Set max. amount of simultaneous games (100/1000?)
+- [ ] Set max. amount of simultaneously persisted games (100/1000?)
 - [ ] Search about timer implementation for games
 
 ### Useful information:
