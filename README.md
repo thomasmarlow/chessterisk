@@ -23,3 +23,5 @@ Currently running on https://chessterisk.herokuapp.com/
 * https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
 * https://flask.palletsprojects.com/en/1.1.x/quickstart/
 * https://medium.com/analytics-vidhya/heroku-deploy-your-flask-app-with-a-database-online-d19274a7a749
+* https://stackoverflow.com/questions/9692962/flask-sqlalchemy-import-context-issue/9695045#9695045
+* https://stackoverflow.com/questions/20460339/flask-sqlalchemy-constructor
