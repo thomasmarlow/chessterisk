@@ -10,14 +10,12 @@ A chess-like online board game, with RNG-based initial position and capturing ef
 - as blue: https://chessterisk.herokuapp.com/test/red
 
 ### TODOs:
-- [ ] Flask server
-	- [ ] `GET /home`: "new game" button
-	- [ ] `GET /newgame`: generate ID per side, redirect to game
-	- [ ] `GET /game/{id}`: game view
-	- [ ] `POST /game/{id}`: game API
-	- [ ] Adapt existing domain to Flask interface
+- [ ] Adapt existing domain to server interface (organize `*.py` into packages/modules?)
 - [ ] Add turn tracker to front (define how)
-- [ ] Organize `*.py` into packages/modules
+- [ ] Integration with PostgresDB through SQLAlchemy
+- [ ] Add error views instead of redirecting to `/home`
+- [ ] Set max. amount of simultaneous games (100/1000?)
+- [ ] Search about timer implementation for games
 
 ### Useful information:
 * https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
