@@ -1,3 +1,17 @@
 .home-button {
-    font-size: 14px;
+    font-size: 4vmin;
+}
+
+.home-title {
+    font-size: 4vmin
+}
+
+#home-welcome-text {
+    font-size: 5vmin
+}
+
+#home-main {
+    width: 75%;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
 }
