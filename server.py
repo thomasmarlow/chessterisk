@@ -23,6 +23,11 @@ def test(side):
     else:
         return flask.render_template('game.html', side=side)
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # your processing here
+    return flask.redirect(flask.url_for('home'))
+
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
