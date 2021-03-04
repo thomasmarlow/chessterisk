@@ -1,13 +1,11 @@
 # chessterisk*
 *"A chess-like online board game, with RNG-based initial position and capturing efficacy."*
 
+Currently running on https://chessterisk.herokuapp.com/
+
 ### Looks, as of now:
 
 ![Getting somewhere](https://media.giphy.com/media/kucRgSSmSObdhqeh0N/giphy.gif)
-
-### Test it yourself:
-- as red: https://chessterisk.herokuapp.com/test/red
-- as blue: https://chessterisk.herokuapp.com/test/red
 
 ### TODOs:
 - [ ] Adapt existing domain to server interface (organize `*.py` into packages/modules?)
