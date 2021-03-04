@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="height: 85vh;">
+  <div id="home-main" class="shadow-lg p-5 w-50">
+    <h2>"A chess-like online board game, with RNG-based initial position and capturing efficacy."</h2>
+    <br><br>
+    <h4>new game</h4>
+    <button id="home-play-random" type="button" class="m-1 btn home-button btn-outline-dark disabled">play against anyone</button>
+    <button id="home-invite" type="button" class="m-1 btn home-button btn-outline-dark disabled">play with a friend</button>
+    <button id="home-test-red" type="button" class="m-1 btn home-button btn-danger">test as red</button>
+    <button id="home-test-blue" type="button" class="m-1 btn home-button btn-info">test as blue</button>
+  </div>
+</div>
+{% endblock content %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+{% endblock styles %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock scripts %}
