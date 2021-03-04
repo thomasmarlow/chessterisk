@@ -1,0 +1,2 @@
+class NonExistantGameView(Exception):
+    pass

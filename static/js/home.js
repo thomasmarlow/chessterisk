@@ -5,3 +5,7 @@ $(document).on('click', '#home-test-red', function () {
 $(document).on('click', '#home-test-blue', function () {
     window.location.href = "/test/blue";
 });
+
+$(document).on('click', '#home-invite', function () {
+    window.location.href = "/newgame/invite";
+});
