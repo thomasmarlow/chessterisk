@@ -11,11 +11,13 @@ Currently running on https://chessterisk.herokuapp.com/
 - [ ] Adapt existing domain to server interface (organize `*.py` into packages/modules?)
   - ...before implementing DB
   - ...only runnable on local server with `threaded=False`
-- [ ] Add turn tracker to front (define how)
 - [ ] Integration with PostgresDB through SQLAlchemy
 - [ ] Add error views instead of redirecting to `/home`
 - [ ] Set max. amount of simultaneously persisted games (100/1000?)
 - [ ] Search about timer implementation for games
+- [ ] Add turn tracker to front (define how)
+- [ ] Enhance board sizing (`vmin`?)
+- [ ] Replace king symbol for https://fontawesome.com/icons/crown?style=solid
 
 ### Useful information:
 * https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
