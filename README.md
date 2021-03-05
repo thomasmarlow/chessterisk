@@ -32,3 +32,4 @@ Currently running on https://chessterisk.herokuapp.com/
 * https://stackoverflow.com/questions/9692962/flask-sqlalchemy-import-context-issue/9695045#9695045
 * https://stackoverflow.com/questions/20460339/flask-sqlalchemy-constructor
 * https://docs.sqlalchemy.org/en/13/orm/cascades.html#unitofwork-cascades
+* https://stackoverflow.com/questions/183042/how-can-i-use-uuids-in-sqlalchemy
