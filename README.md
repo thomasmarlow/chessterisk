@@ -37,3 +37,4 @@ Currently running on https://chessterisk.herokuapp.com/
 * https://docs.sqlalchemy.org/en/13/orm/cascades.html#unitofwork-cascades
 * https://stackoverflow.com/questions/183042/how-can-i-use-uuids-in-sqlalchemy
 * https://www.shanelynn.ie/asynchronous-updates-to-a-webpage-with-flask-and-socket-io/
+* https://stackoverflow.com/questions/61852364/unable-to-update-database-using-flask-sqlalchemy-and-flask-socket-io
