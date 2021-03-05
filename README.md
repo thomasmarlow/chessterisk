@@ -9,17 +9,15 @@ Currently running on https://chessterisk.herokuapp.com/
 
 ## TODOs:
 
-##### Backend
-- [x] Integration with PostgresDB
-- [x] Game invites with Flask-SQLAlchemy
-- [ ] Automatch with Flask-SQLAlchemy
+##### Remaining until next release:
+- [ ] Integration with SocketIO for players to be able to listen to their oponents' moves; gunicorn settings for eventlet/gevent?
+- [ ] Fix game invite issue
+- [ ] Heroku PostgreSQL deployment
+
+##### Next up
+- [ ] Automatch feature
 - [ ] Organise `*.py`s into module/package structure
 - [ ] 10k row cap: set max. amount of simultaneously persisted games, players and guests (include creation_time in tables?)
-
-##### Front+back
-- [ ] Integration with SocketIO for players to be able to listen to their oponents' moves; gunicorn settings?
-
-##### Frontend
 - [ ] Add error views instead of redirecting to `/home`
 - [ ] Add turn tracker to front (define how will it look)
 - [ ] Enhance board sizing (`vmin`?)
@@ -27,6 +25,7 @@ Currently running on https://chessterisk.herokuapp.com/
 
 ##### Additional
 - [ ] Search about timer implementation for games
+- [ ] Try PyMODM integration
 
 ## Useful information:
 * https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
