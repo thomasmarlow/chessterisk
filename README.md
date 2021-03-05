@@ -11,14 +11,17 @@ Currently running on https://chessterisk.herokuapp.com/
 
 ##### Backend
 - [x] Integration with PostgresDB
-- [ ] Game invites with Flask-SQLAlchemy
+- [x] Game invites with Flask-SQLAlchemy
 - [ ] Automatch with Flask-SQLAlchemy
 - [ ] Organise `*.py`s into module/package structure
+- [ ] 10k row cap: set max. amount of simultaneously persisted games, players and guests (include creation_time in tables?)
+
+##### Front+back
+- [ ] Integration with SocketIO for players to be able to listen to their oponents' moves; gunicorn settings?
 
 ##### Frontend
-- [ ] Set max. amount of simultaneously persisted games (100/1000?)
 - [ ] Add error views instead of redirecting to `/home`
-- [ ] Add turn tracker to front (define how)
+- [ ] Add turn tracker to front (define how will it look)
 - [ ] Enhance board sizing (`vmin`?)
 - [ ] Replace king symbol for https://fontawesome.com/icons/crown?style=solid
 
@@ -33,3 +36,4 @@ Currently running on https://chessterisk.herokuapp.com/
 * https://stackoverflow.com/questions/20460339/flask-sqlalchemy-constructor
 * https://docs.sqlalchemy.org/en/13/orm/cascades.html#unitofwork-cascades
 * https://stackoverflow.com/questions/183042/how-can-i-use-uuids-in-sqlalchemy
+* https://www.shanelynn.ie/asynchronous-updates-to-a-webpage-with-flask-and-socket-io/
