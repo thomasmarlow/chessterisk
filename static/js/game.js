@@ -253,8 +253,8 @@ const board_square_set = (row, col, board_square_data) => {
 }
 
 const get_board_side = () => {
-    test_logger(['side', $('#board-main').attr('data-side')])
-    return $('#board-main').attr('data-side')
+    test_logger(['side', $('#board-main').attr('data-color')]) // TODO: rename all 'side' to 'color'
+    return $('#board-main').attr('data-color')
 }
 
 const self_generate_board_grid = () => {
