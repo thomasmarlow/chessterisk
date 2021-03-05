@@ -1,5 +1,3 @@
-# import manager_exceptions
-# import server_utils
 from models import db, Game, Guest, Player
 import game_exceptions
 import flask
@@ -52,38 +50,51 @@ def newgame_invite():
 # def newgame_automatch():
 #     return 'New game'
 
-@app.route('/game/<game_id>', methods=['GET', 'POST'])
-def game(game_id):
-    if flask.request.method == 'POST':
-        return 'POST to game'
-    else:
-        if not is_valid_uuid(game_id):
-            return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
-        if not 'guest_id' in flask.session: # TODO: abstract guest creation into separate function
-            new_guest = Guest()
-            db.session.add(new_guest)
+@app.route('/game/<game_id>', methods=['GET'])
+def game(game_id): # TODO: delegation went on vacation, huh?
+    if not is_valid_uuid(game_id):
+        return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
+    if not 'guest_id' in flask.session: # TODO: abstract guest creation into separate function
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
+    try:
+        game=Game.query.filter_by(id=game_id).one()
+    except NoResultFound:
+        return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
+    # except MultipleResultsFound:
+    #     pass # TODO
+    try: # we first check if the guest is already in this game
+        player=game.get_player(guest_id=flask.session['guest_id'])
+        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter)
+    except game_exceptions.NoSuchPlayerInGame:
+        try: # if it isn't, we try to make it into a player
+            new_guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
+            player=game.add_player(guest=new_guest)
+            db.session.add(player)
             db.session.commit()
-            flask.session['guest_id'] = new_guest.id
-            print("NEW GUEST ID {}".format(flask.session['guest_id']))
-        try:
-            game=Game.query.filter_by(id=game_id).one()
-        except NoResultFound:
-            return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
-        # except MultipleResultsFound:
-        #     pass # TODO
-        try: # we first check if the guest is already in this game
-            player=game.get_player(guest_id=flask.session['guest_id'])
             return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter)
-        except game_exceptions.NoSuchPlayerInGame:
-            try: # if it isn't, we try to make it into a player
-                new_guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
-                player=game.add_player(guest=new_guest)
-                db.session.add(player)
-                db.session.commit()
-                return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter)
-            except game_exceptions.GameIsFull:
-                return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
-            
+        except game_exceptions.GameIsFull:
+            return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
+
+
+@app.route('/game/<game_id>/make_move', methods=['POST'])
+def make_move(game_id): # TODO: check if sender is the corresponding player!!
+    if not is_valid_uuid(game_id):
+        return flask.redirect(flask.url_for('home')) # TODO: how to return error for POST?
+    try:
+        game=Game.query.filter_by(id=game_id).one()
+    except NoResultFound:
+        return flask.redirect(flask.url_for('home')) # TODO: how to return error for POST?
+    # except MultipleResultsFound:
+    #     pass # TODO
+    move=flask.request.get_json()
+    move_result=game.move(move['coords_from'], move['coords_to'])
+    # ANCHOR
+    db.session.add(game)
+    db.session.commit()
 
 
 @app.route('/test/<side>', methods=['GET', 'POST'])
@@ -108,4 +119,4 @@ def is_valid_uuid(uuid_to_test, version=4): # TODO: move to better place, utils.
 
 if __name__ == '__main__':
     # game_manager=server_utils.GameManager()
-    app.run(threaded=False, port=5000, debug=True)
+    app.run(threaded=True, port=5000, debug=True)
