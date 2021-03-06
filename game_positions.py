@@ -21,24 +21,24 @@ class Position:
         if not piece_moving.can_move_to(self.pieces[int(string_coords_to[0]), int(string_coords_to[1])]):
             raise ThisPieceCantMoveThere()
         if not self.pieces[int(string_coords_to[0]), int(string_coords_to[1])].is_empty_square():
-            self.pieces[int(string_coords_from[0]), int(string_coords_from[1])]=NoPiece(row=int(string_coords_from[0], col=int(string_coords_from[1]))
+            self.pieces[int(string_coords_from[0]), int(string_coords_from[1])]=NoPiece(row=int(string_coords_from[0]), col=int(string_coords_from[1]))
             self.pieces[int(string_coords_to[0]), int(string_coords_to[1])]=piece_moving
             self.color_of_turn = red if self.color_of_turn==blue else blue
             self.update_string()
             return game_move_results.MovedToEmptySquare() # TODO: args to generate specific message or sth
         else: # TODO: refactor with possible class Attack or Combar or sth
-            score_defender=self.pieces[int(string_coords_to[0]), int(string_coords_to[1])].score(is_attacker=False)
-            score_attacker=self.pieces[int(string_coords_from[0]), int(string_coords_from[1])].score(is_attacker=True)
-            if score_attacker > score_defender:
-                self.pieces[int(string_coords_from[0]), int(string_coords_from[1])]=NoPiece()
+            defender_score=self.pieces[int(string_coords_to[0]), int(string_coords_to[1])].score(is_attacker=False)
+            attacker_score=self.pieces[int(string_coords_from[0]), int(string_coords_from[1])].score(is_attacker=True)
+            if attacker_score > defender_score:
+                self.pieces[int(string_coords_from[0]), int(string_coords_from[1])]=NoPiece(row=int(string_coords_from[0]), col=int(string_coords_from[1]))
                 self.pieces[int(string_coords_to[0]), int(string_coords_to[1])]=piece_moving
                 self.color_of_turn = red if self.color_of_turn==blue else blue
                 self.update_string()
-                return game_move_results.AttackResult(succeded=True, score_attacker, score_defender)
+                return game_move_results.AttackResult(succeded=True, attacker_score=attacker_score, attacker_color=piece_moving.color, defender_score=defender_score)
             else:
                 self.color_of_turn = red if self.color_of_turn==blue else blue
                 self.update_string()
-                return game_move_results.AttackResult(succeded=False, score_attacker, score_defender)
+                return game_move_results.AttackResult(succeded=False, attacker_score=attacker_score, attacker_color=piece_moving.color, defender_score=defender_score)
         
 
     def update_string(self):

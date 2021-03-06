@@ -1,15 +1,20 @@
+import flask
+import flask_socketio
+
+import flask_sqlalchemy
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from uuid import UUID
+
 from models import db, Game, Guest, Player
 import game_exceptions
-import flask
-import flask_sqlalchemy
-from uuid import UUID
-from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 
 app = flask.Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://chessterisk:chessterisk@localhost:5432/chessterisk'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db.init_app(app)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/' # TODO: randomize
+
+db.init_app(app)
+socketio = flask_socketio.SocketIO(app)
 
 @app.route('/home', methods=['GET'])
 def home():
@@ -79,23 +84,28 @@ def game(game_id): # TODO: delegation went on vacation, huh?
         except game_exceptions.GameIsFull:
             return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
 
+@socketio.on('join game')
+def handle_join_game(received_json): # TODO: flask.session can be used for checks!
+    flask_socketio.join_room(json['game_id'])
 
-@app.route('/game/<game_id>/make_move', methods=['POST'])
-def make_move(game_id): # TODO: check if sender is the corresponding player!!
-    if not is_valid_uuid(game_id):
-        return flask.redirect(flask.url_for('home')) # TODO: how to return error for POST?
-    try:
-        game=Game.query.filter_by(id=game_id).one()
-    except NoResultFound:
-        return flask.redirect(flask.url_for('home')) # TODO: how to return error for POST?
-    # except MultipleResultsFound:
-    #     pass # TODO
-    move=flask.request.get_json()
-    move_result=game.move(move['coords_from'], move['coords_to'])
-    # ANCHOR
+@socketio.on('make move')
+def handle_make_move(received_json): # TODO: flask.session can be used for checks!
+    game=Game.query.filter_by(id=received_json['game_id']).one() # TODO: missing exception handling (including valid uuid)
+    move_result=game.move(received_json['coords_from'], received_json['coords_to'])
+    data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+    if move_result.triggers_alert_display():
+        data_to_send['alert']=move_result.message()
+    json_to_send=flask.jsonify(data_to_send)
     db.session.add(game)
     db.session.commit()
+    flask_socketio.emit('move made', json_to_send, room=game.id)
 
+@app.route('/game/<game_id>/position', methods=['GET'])
+def game_position(game_id):
+    game=Game.query.filter_by(id=game_id).one() # TODO: exception handling
+    data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+    json_to_send=flask.jsonify(data_to_send)
+    return json_to_send
 
 @app.route('/test/<side>', methods=['GET', 'POST'])
 def test(side):

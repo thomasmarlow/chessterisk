@@ -4,7 +4,7 @@ from game_exceptions import NoSuchPieceSubtype
 class Piece:
     def get_piece(as_string, row, col): # bk, rk, r6, b5, es, etc.
         PieceSubtype=Piece.get_subtype(as_string) # TODO: class PieceString
-        return PieceSubtype(as_string, row, col)
+        return PieceSubtype(as_string=as_string, row=row, col=col)
 
     def get_subtype(as_string):
         if as_string[1]=='k': return Master
@@ -37,6 +37,9 @@ class Master(Piece):
     def as_string(self):
         return self.color.as_char()+'k'
 
+    def score(self, is_attacker):
+        return 1000 if is_attacker else -1
+
 
 class Numbered(Piece):
     def __init__(self, as_string, row, col):
@@ -52,8 +55,13 @@ class Numbered(Piece):
     def as_string(self):
         return self.color.as_char()+str(self.number)
 
+    def score(self, is_attacker):
+        random.seed()
+        score=random.random()*self.number
+        return (3/2)*score if is_attacker else score
+
 class NoPiece: # null object
-    def __init__(self, as_string=None, row, col):
+    def __init__(self, row, col, as_string=None):
         self.row=row
         self.col=col
 

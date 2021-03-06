@@ -20,7 +20,7 @@ class Game(db.Model):
 
     def __init__(self, **kwargs):
         super(Game, self).__init__(**kwargs)
-        self.position_string=PositionGenerator().get_random_position()
+        self.position_string=game_positions.PositionStringGenerator().get_random_position()
         self.color_string=random.choice([red, blue]).string
 
     def get_player(self, guest_id):
@@ -52,6 +52,8 @@ class Game(db.Model):
     def move(self, string_coords_from, string_coords_to):
         position=game_positions.Position(self.position_string, self.color_string)
         move_result=position.move(string_coords_from, string_coords_to)
+        self.position_string=position.as_string
+        self.color_string=position.color_of_turn.string
         return move_result
 
 

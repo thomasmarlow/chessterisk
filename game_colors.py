@@ -4,9 +4,10 @@ class Color:
     def __init__(self, as_string_or_char):
         if as_string_or_char in ['r', 'red']:
             self.string='red'
-        if as_string_or_char in ['b', 'blue']:
+        elif as_string_or_char in ['b', 'blue']:
             self.string='blue'
-        raise NoSuchColor()
+        else:
+            raise NoSuchColor()
 
     def __eq__(self, other):
         return (self.__class__ == other.__class__ and self.string == other.string)

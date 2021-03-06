@@ -15,3 +15,6 @@ class InvalidStringCoordinates(Exception):
 
 class NoSuchPieceSubtype(Exception):
     pass
+
+class NotThisColorsTurn(Exception):
+    pass
