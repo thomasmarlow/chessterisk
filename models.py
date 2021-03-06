@@ -2,6 +2,7 @@ import flask_sqlalchemy
 import random
 import game_exceptions
 import game_positions
+import game_move_results
 from game_colors import red, blue
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -14,6 +15,7 @@ class Game(db.Model):
     player_b_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=True)
     position_string = db.Column(db.String(90), nullable=False)
     color_string = db.Column(db.String(10), nullable=False)
+    winner_color_string = db.Column(db.String(10), nullable=True)
 
     player_a = db.relationship('Player', foreign_keys=[player_a_id])
     player_b = db.relationship('Player', foreign_keys=[player_b_id])
@@ -54,6 +56,8 @@ class Game(db.Model):
         move_result=position.move(string_coords_from, string_coords_to)
         self.position_string=position.as_string
         self.color_string=position.color_of_turn.string
+        if move_result.__class__==game_move_results.GameHasEnded:
+            self.winner_color_string=move_result.winner_color_string
         return move_result
 
 

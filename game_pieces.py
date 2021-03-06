@@ -29,7 +29,7 @@ class Piece:
         return [(self.row+distance, self.col), (self.row-distance, self.col), (self.row, self.col+distance), (self.row, self.col-distance)]
 
     def get_diagonal_moves(self, distance):
-        return [(self.row+distance, self.col+distance), (self.row-distance, self.col+distance), (self.row-distance, self.col+distance), (self.row-distance, self.col-distance)]
+        return [(self.row+distance, self.col+distance), (self.row-distance, self.col+distance), (self.row+distance, self.col-distance), (self.row-distance, self.col-distance)]
 
 
 class Master(Piece):

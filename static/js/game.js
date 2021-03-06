@@ -1,5 +1,6 @@
 var board_grid = []
 // var position_string = 'bk'
+var color_of_turn = ''
 var socket
 var min_row = 0
 var max_row = 6
@@ -13,6 +14,9 @@ var board_blue_styling = 'btn-info'
 var board_side = "blue"
 
 $('#board-main').on('click', '.board-ally-piece', function() {
+    if ($(this).hasClass('disabled')) {
+        return
+    }
     board_deselect_all()
     board_reset_all_movable()
     board_select($(this))
@@ -237,10 +241,61 @@ $(document).ready(function() {
     socket.on('move made', function(json_received) {
         console.log('inside move made')
         position_string=json_received.position
+        color_of_turn=json_received.color_of_turn
         console.log('json_received')
         render_board()
+        if (json_received.hasOwnProperty('attack_result')) {
+            display_attack_result(json_received.attack_result)
+        } else {
+            $('#board-info-display').removeClass('alert-dark')
+            $('#board-info-display').removeClass('alert-primary')
+            $('#board-info-display').removeClass('alert-danger')
+            $('#board-info-display').addClass('alert-dark')
+            $('#board-info-display').text('...')
+        }
+        if (json_received.hasOwnProperty('winner_color')) {
+            display_winner(json_received.winner_color)
+        }
     });
+    // set_initial_message();
 });
+
+const set_initial_message = () => {
+    if ( $('#board-main').attr('data-is-inviter') != "" ) {
+        $('#board-info-display').text('share your url with your friend')
+        return
+    }
+    $('#board-info-display').text('entered game by invitation')
+}
+
+const display_attack_result = (attack_result) => {
+    if (attack_result.split(' ')[0] == 'red') {
+        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-primary')
+        $('#board-info-display').removeClass('alert-danger')
+        $('#board-info-display').addClass('alert-danger')
+    } else {
+        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-primary')
+        $('#board-info-display').removeClass('alert-danger')
+        $('#board-info-display').addClass('alert-primary')
+    }
+    $('#board-info-display').text(attack_result)
+}
+
+const display_winner = (winner_color) => {
+    $('#board-info-display').removeClass('alert-dark')
+    $('#board-info-display').removeClass('alert-primary')
+    $('#board-info-display').removeClass('alert-danger')
+    if (winner_color == 'red') {
+        $('#board-info-display').addClass('alert-danger')
+        $('#board-info-display').text('red won!')
+    } else {
+        $('#board-info-display').addClass('alert-primary')
+        $('#board-info-display').text('blue won!')
+    }
+    disable_all_squares()
+}
 
 const board_square_set = (row, col, piece_string) => {
     test_logger([row, col, piece_string])
@@ -282,7 +337,7 @@ const get_piece_color = (piece_string) => {
     return 'red'
 }
 
-const get_position = () => {
+const get_position = () => { // could be replaced by 'join game'
     // $.get( "/game/"+ $('#board-main').attr('data-game-id') +"/position", function(json_response) {
     //     test_logger(json_response)
     //     position_string=json_response.position
@@ -294,6 +349,7 @@ const get_position = () => {
         success: function(json_response) {
             test_logger(json_response)
             position_string=json_response.position
+            color_of_turn=json_response.color_of_turn
             render_board()
         }
     });
@@ -314,6 +370,37 @@ const render_board = () => {
             }
         }
     }
+    if (color_of_turn != board_side) {
+        disable_all_squares()
+    }
+    check_if_winner()
+}
+
+const check_if_winner = () => {
+    if ( $('#board-main').attr('data-winner') == 'red' ) {
+        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-primary')
+        $('#board-info-display').removeClass('alert-danger')
+        $('#board-info-display').addClass('alert-danger')
+        console.log('check if winner: red')
+        disable_all_squares()
+    }
+    if ( $('#board-main').attr('data-winner') == 'blue' ) {
+        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-primary')
+        $('#board-info-display').removeClass('alert-danger')
+        $('#board-info-display').addClass('alert-primary')
+        console.log('check if winner: blue')
+        disable_all_squares()
+    }
+}
+
+const disable_all_squares = () => {
+    $('.board-square').each(function() {
+        if (!($(this).hasClass('disabled'))) {
+            $(this).addClass('disabled')
+        }
+    });
 }
 
 const reset_whole_board = () => {

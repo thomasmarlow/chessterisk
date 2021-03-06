@@ -1,7 +1,12 @@
 .board-square {
-    height: 7vh;
-    width: 7vh;
-    font-size: 5vh;
-    line-height: 5vh;
+    height: 9vmin;
+    width: 9vmin;
+    font-size: 6vmin;
+    line-height: 6vmin;
     padding:0% !important;
+}
+
+#board-info-display {
+    font-size: 3vmin;
+    line-height: 3vmin;
 }
