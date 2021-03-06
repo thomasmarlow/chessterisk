@@ -1,34 +1,115 @@
-import manager_exceptions
-import server_utils
 import flask
+import flask_socketio
+
+import flask_sqlalchemy
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+from uuid import UUID
+
+from models import db, Game, Guest, Player
+import game_exceptions
 
 app = flask.Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://chessterisk:chessterisk@localhost:5432/chessterisk'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/' # TODO: randomize
+
+db.init_app(app)
+socketio = flask_socketio.SocketIO(app)
 
 @app.route('/home', methods=['GET'])
 def home():
+    if not 'guest_id' in flask.session:
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
     return flask.render_template('home.html')
 
 @app.route('/newgame/invite', methods=['GET'])
 def newgame_invite():
-    gameview_id_inviter, gameview_id_invited = game_manager.get_new_gameview_id_pair()
-    return flask.redirect(flask.url_for('game', gameview_id=gameview_id_inviter))
+    if not 'guest_id' in flask.session:
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
+    new_game=Game()
+    new_game.player_a=Player(is_inviter=True)
+    new_game.player_a.set_random_color()
+    try:
+        new_game.player_a.guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
+    except NoResultFound:
+        guest = Guest()
+        db.session.add(guest)
+        db.session.commit()
+        flask.session['guest_id'] = guest.id
+        print("NEW GUEST ID {} (for existing guest)".format(flask.session['guest_id']))
+    except MultipleResultsFound:
+        pass # TODO
+    db.session.add(new_game)
+    db.session.commit()
+    return flask.redirect(flask.url_for('game', game_id=new_game.id))
 
 # @app.route('/newgame/automatch', methods=['GET'])
 # def newgame_automatch():
 #     return 'New game'
 
-@app.route('/game/<gameview_id>', methods=['GET', 'POST'])
-def game(gameview_id):
-    if flask.request.method == 'POST':
-        return 'POST to game'
-    else:
-        try:
-            game=game_manager.get_game(gameview_id)
-        except manager_exceptions.NonExistantGameView:
-            return flask.redirect(flask.url_for('home')) # TODO: 404
-        side=game.get_side_name(gameview_id)
-        invite_link=flask.url_for('game', gameview_id=game.get_invited_id()) if game.is_inviter(gameview_id) else ''
-        return flask.render_template('game.html', side=side, invite_link=invite_link)
+@app.route('/game/<game_id>', methods=['GET'])
+def game(game_id): # TODO: delegation went on vacation, huh?
+    if not is_valid_uuid(game_id):
+        return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
+    if not 'guest_id' in flask.session: # TODO: abstract guest creation into separate function
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
+    try:
+        game=Game.query.filter_by(id=game_id).one()
+    except NoResultFound:
+        return flask.redirect(flask.url_for('home')) # TODO: warning alert in home
+    # except MultipleResultsFound:
+    #     pass # TODO
+    try: # we first check if the guest is already in this game
+        player=game.get_player(guest_id=flask.session['guest_id'])
+        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id)
+    except game_exceptions.NoSuchPlayerInGame:
+        try: # if it isn't, we try to make it into a player
+            new_guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
+            player=game.add_player(guest=new_guest)
+            db.session.add(player)
+            db.session.commit()
+            return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id)
+        except game_exceptions.GameIsFull:
+            return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
+
+@socketio.on('join game')
+def handle_join_game(received_json): # TODO: flask.session can be used for checks!
+    flask_socketio.join_room(received_json['game_id'])
+    print('someone joined game '+received_json['game_id'])
+
+@socketio.on('make move')
+def handle_make_move(received_json): # TODO: flask.session can be used for checks!
+    game=Game.query.filter_by(id=received_json['game_id']).one() # TODO: missing exception handling (including valid uuid)
+    print(received_json)
+    print(game.color_string)
+    move_result=game.move(received_json['coords_from'], received_json['coords_to'])
+    data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+    if move_result.triggers_alert_display():
+        data_to_send['alert']=move_result.message()
+    db.session.add(game)
+    db.session.commit()
+    flask_socketio.emit('move made', data_to_send, room=received_json['game_id'])
+    print('sent json to '+received_json['game_id'])
+    print(data_to_send)
+
+@app.route('/game/<game_id>/position', methods=['GET'])
+def game_position(game_id):
+    game=Game.query.filter_by(id=game_id).one() # TODO: exception handling
+    data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+    json_to_send=flask.jsonify(data_to_send)
+    return json_to_send
 
 @app.route('/test/<side>', methods=['GET', 'POST'])
 def test(side):
@@ -41,10 +122,15 @@ def test(side):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    # your processing here
     return flask.redirect(flask.url_for('home'))
 
+def is_valid_uuid(uuid_to_test, version=4): # TODO: move to better place, utils.py or sth
+    try:
+        uuid_obj = UUID(uuid_to_test, version=version)
+    except ValueError:
+        return False
+    return str(uuid_obj) == uuid_to_test
+
 if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-    game_manager=server_utils.GameManager()
-    app.run(threaded=False, port=5000, debug=True)
+    # game_manager=server_utils.GameManager()
+    app.run(threaded=True, port=5000, debug=True)

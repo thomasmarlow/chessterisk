@@ -1,8 +1,11 @@
 var board_grid = []
+// var position_string = 'bk'
+var socket
 var min_row = 0
 var max_row = 6
 var min_col = 0
 var max_col = 5
+var str_piece_size = 2
 var board_ally_styling
 var board_enemy_styling
 var board_red_styling = 'btn-danger'
@@ -147,17 +150,31 @@ const is_even = (number) => {
 $('#board-main').on('click', '.board-movable-square', function () {
     let selected_ally_piece = $('.board-selected')
     test_logger(selected_ally_piece)
-    if (selected_ally_piece) {
-        if (board_can_move(selected_ally_piece, $(this))) {
-            board_make_move(selected_ally_piece, $(this))
-            board_reset_all_movable()
-        }
-    }
-});
+    test_logger(get_coords_string(selected_ally_piece))
+    test_logger(get_coords_string($(this)))
 
-const board_can_move = (selected_ally_piece, movable_square) => {
-    return true
-};
+    if (selected_ally_piece) {
+        socket.emit('make move', {
+            game_id: $('#board-main').attr('data-game-id'),
+            coords_from: get_coords_string(selected_ally_piece),
+            coords_to: get_coords_string($(this))
+        })
+        // board_make_move(selected_ally_piece, $(this))
+        // board_reset_all_movable()
+    }
+}); 
+
+// TODO: this is horrible and needs a better solution... possibly on framework migration?
+const get_coords_string = (square) => {
+    if (board_side == 'red') {
+        return square.attr('id').split('-')[2]+square.attr('id').split('-')[3]
+    }
+    console.log(square.attr('id'))
+    let row = max_row - parseInt(square.attr('id').split('-')[2]) - 1
+    let col = max_col - parseInt(square.attr('id').split('-')[3]) - 1
+    console.log(row, col)
+    return row.toString()+col.toString()
+}
 
 const board_make_move = (selected_ally_piece, movable_square) => {
     let can_move = false
@@ -194,7 +211,7 @@ const board_attack = (selected_ally_piece, movable_square) => {
 };
 
 const test_logger = (to_log) => {
-    if (true) {
+    if (false) {
         console.log(to_log)
     }
 };
@@ -203,7 +220,7 @@ $(document).ready(function() {
     board_side = get_board_side()
     test_logger('heyy')
     test_logger(['side after ready', board_side])
-    self_generate_board_grid()
+    // self_generate_board_grid()
     test_logger(board_grid)
     test_logger(board_side == "red")
     if (board_side == "red") {
@@ -214,22 +231,21 @@ $(document).ready(function() {
         board_ally_styling = board_blue_styling
         board_enemy_styling = board_red_styling
     }
-    for (let row = min_row; row < max_row; row++) {
-        for (let col = min_col; col < max_col; col++) {
-            if (board_side == 'red') {
-                board_square_set(row, col, board_grid[row][col]);
-            } else {
-                test_logger('inside for-else')
-                board_square_set(max_row-row-1, max_col-col-1, board_grid[row][col]);
-            }
-        }
-    }
+    get_position()
+    socket = io();
+    socket.emit('join game', {game_id: $('#board-main').attr('data-game-id')})
+    socket.on('move made', function(json_received) {
+        console.log('inside move made')
+        position_string=json_received.position
+        console.log('json_received')
+        render_board()
+    });
 });
 
-const board_square_set = (row, col, board_square_data) => {
-    test_logger([row, col, board_square_data])
+const board_square_set = (row, col, piece_string) => {
+    test_logger([row, col, piece_string])
     let board_square = $(`#board-square-${row}-${col}`)
-    if (board_square_data.type == 'empty') {
+    if (piece_string == 'es') {
         board_square.addClass('board-empty-square')
         board_square.addClass('btn-outline-secondary')
         board_square.addClass('disabled')
@@ -239,22 +255,104 @@ const board_square_set = (row, col, board_square_data) => {
         board_square.removeClass('btn-outline-secondary')
         board_square.removeClass('disabled')
     }
-    board_square.text(board_square_data.text)
-    if (board_square_data.type == board_side) {
+    board_square.text(get_piece_symbol(piece_string)) // TODO get_piece_symbol()
+    if (get_piece_color(piece_string) == board_side) {
         board_square.addClass('board-ally-piece')
     } else {
         board_square.addClass('board-enemy-piece')
     }
-    if (board_square_data.type == 'red') {
+    if (get_piece_color(piece_string) == 'red') {
         board_square.addClass(board_red_styling)
     } else {
         board_square.addClass(board_blue_styling)
     }
 }
 
+const get_piece_symbol = (piece_string) => {
+    if (piece_string.charAt(1) == 'k') {
+        return '♚'
+    }
+    return piece_string.charAt(1)
+}
+
+const get_piece_color = (piece_string) => {
+    if (piece_string.charAt(0) == 'b') {
+        return 'blue'
+    }
+    return 'red'
+}
+
+const get_position = () => {
+    // $.get( "/game/"+ $('#board-main').attr('data-game-id') +"/position", function(json_response) {
+    //     test_logger(json_response)
+    //     position_string=json_response.position
+    // });
+    $.ajax({
+        // async: false,
+        type: 'GET',
+        url: "/game/"+ $('#board-main').attr('data-game-id') +"/position",
+        success: function(json_response) {
+            test_logger(json_response)
+            position_string=json_response.position
+            render_board()
+        }
+    });
+}
+
+const render_board = () => {
+    reset_whole_board()
+    for (let row = min_row; row < max_row; row++) {
+        for (let col = min_col; col < max_col; col++) {
+            if (board_side == 'red') {
+                // board_square_set(row, col, board_grid[row][col]);
+                test_logger('red is bottom')
+                board_square_set(row, col, position_string.slice(str_piece_size*(row*max_col+col), str_piece_size*(row*max_col+col+1)))
+            } else {
+                test_logger('blue is bottom')
+                // board_square_set(max_row-row-1, max_col-col-1, board_grid[row][col]);
+                board_square_set(max_row-row-1, max_col-col-1, position_string.slice(str_piece_size*(row*max_col+col), str_piece_size*(row*max_col+col+1)))
+            }
+        }
+    }
+}
+
+const reset_whole_board = () => {
+    $('.board-square').each(function() {
+        $(this).removeClass()
+        $(this).text('')
+        $(this).addClass('btn board-square board-empty-square btn-outline-secondary disabled')
+    });
+}
+
+// const board_square_set = (row, col, board_square_data) => {
+//     test_logger([row, col, board_square_data])
+//     let board_square = $(`#board-square-${row}-${col}`)
+//     if (board_square_data.type == 'empty') {
+//         board_square.addClass('board-empty-square')
+//         board_square.addClass('btn-outline-secondary')
+//         board_square.addClass('disabled')
+//         return
+//     } else {
+//         board_square.removeClass('board-empty-square')
+//         board_square.removeClass('btn-outline-secondary')
+//         board_square.removeClass('disabled')
+//     }
+//     board_square.text(board_square_data.text)
+//     if (board_square_data.type == board_side) {
+//         board_square.addClass('board-ally-piece')
+//     } else {
+//         board_square.addClass('board-enemy-piece')
+//     }
+//     if (board_square_data.type == 'red') {
+//         board_square.addClass(board_red_styling)
+//     } else {
+//         board_square.addClass(board_blue_styling)
+//     }
+// }
+
 const get_board_side = () => {
-    test_logger(['side', $('#board-main').attr('data-side')])
-    return $('#board-main').attr('data-side')
+    test_logger(['side', $('#board-main').attr('data-color')]) // TODO: rename all 'side' to 'color'
+    return $('#board-main').attr('data-color')
 }
 
 const self_generate_board_grid = () => {

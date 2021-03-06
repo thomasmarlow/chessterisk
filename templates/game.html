@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Page Content -->
 <div class="d-flex justify-content-center align-items-center" style="height: 85vh;">
-  <div id="board-main" class="shadow-lg py-2 px-4" data-side="{{ side }}" data-invite-link="{{ invite_link }}">
+  <div id="board-main" class="shadow-lg py-2 px-4" data-color="{{ color }}" data-is-inviter="{{ is_inviter }}" data-game-id="{{ game_id }}">
     <div class="row justify-content-center">
       <div class="col-auto m-0 p-1">
         <button id="board-square-5-0" type="button" class="btn board-square board-empty-square btn-outline-secondary disabled"></button>
@@ -115,5 +115,7 @@
 {% endblock styles %}
 
 {% block scripts %}
+<!-- <script src="/socket.io/socket.io.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js" integrity="sha512-YybopSVjZU0fe8TY4YDuQbP5bhwpGBE/T6eBUEZ0usM72IWBfWrgVI13qfX4V2A/W7Hdqnm7PIOYOwP9YHnICw==" crossorigin="anonymous"></script>
 <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 {% endblock scripts %}
