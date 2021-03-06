@@ -2,6 +2,7 @@ var board_grid = []
 // var position_string = 'bk'
 var color_of_turn = ''
 var socket
+var is_spectator = false
 var min_row = 0
 var max_row = 6
 var min_col = 0
@@ -222,11 +223,6 @@ const test_logger = (to_log) => {
 
 $(document).ready(function() {
     board_side = get_board_side()
-    test_logger('heyy')
-    test_logger(['side after ready', board_side])
-    // self_generate_board_grid()
-    test_logger(board_grid)
-    test_logger(board_side == "red")
     if (board_side == "red") {
         board_ally_styling = board_red_styling
         board_enemy_styling = board_blue_styling
@@ -236,6 +232,10 @@ $(document).ready(function() {
         board_enemy_styling = board_red_styling
     }
     get_position()
+    is_spectator = ($('#board-main').attr('data-is-viewer') == 'True')
+    if ( is_viewer() && $('#board-main').attr('data-winner') == 'None' ) {
+        $('#board-info-display').text('entered as spectator')
+    }
     socket = io();
     socket.emit('join game', {game_id: $('#board-main').attr('data-game-id')})
     socket.on('move made', function(json_received) {
@@ -257,6 +257,11 @@ $(document).ready(function() {
             display_winner(json_received.winner_color)
         }
     });
+    socket.on('viewer mode', function() {
+        console.log('viewer mode event triggered')
+        $('#board-main').attr('data-is-viewer', 'True')
+        render_board()
+    })
     // set_initial_message();
 });
 
@@ -373,7 +378,20 @@ const render_board = () => {
     if (color_of_turn != board_side) {
         disable_all_squares()
     }
+    if ( is_viewer() ) {
+        disable_all_squares()
+    }
     check_if_winner()
+}
+
+const is_viewer = () => {
+    // console.log('is viewer', $('#board-main').attr('data-is-viewer'), $('#board-main').attr('data-is-viewer') == 'True')
+    // if ( $('#board-main').attr('data-is-viewer') == 'True' ) {
+    //     return true
+    // }
+    // return false
+    console.log('is spectator: ', is_spectator)
+    return is_spectator
 }
 
 const check_if_winner = () => {

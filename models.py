@@ -60,6 +60,11 @@ class Game(db.Model):
             self.winner_color_string=move_result.winner_color_string
         return move_result
 
+    def is_full(self):
+        if self.player_a is None: return False
+        if self.player_b is None: return False
+        return True
+
 
 class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
