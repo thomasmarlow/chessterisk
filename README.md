@@ -19,14 +19,17 @@ Limited testing version running on https://chessterisk.herokuapp.com/
 - [ ] 2nd deployment (adding Postgres DB + probably tweaking gunicorn settings)
 
 ##### Next up
+- [ ] Check and fix/refactor all TODOs
 - [ ] Automatch feature
 - [ ] Organise `*.py`s into module/package structure
 - [ ] Add error views instead of redirecting to `/home`
 - [ ] Enhance board sizing (`vmin`?)
+- [ ] Add `/rules` and `/about`
 
-##### Additional
-- [ ] Search about timer implementation for games
-- [ ] Try PyMODM integration?
+##### Down the road
+- [ ] Think about timer implementation
+- [ ] Try PyMODM integration
+- [ ] Switch to vanilla js or React
 
 ## Useful information:
 * https://stackoverflow.com/questions/41144565/flask-does-not-see-change-in-js-file
