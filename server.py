@@ -73,32 +73,36 @@ def game(game_id): # TODO: delegation went on vacation, huh?
     #     pass # TODO
     try: # we first check if the guest is already in this game
         player=game.get_player(guest_id=flask.session['guest_id'])
-        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter)
+        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id)
     except game_exceptions.NoSuchPlayerInGame:
         try: # if it isn't, we try to make it into a player
             new_guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
             player=game.add_player(guest=new_guest)
             db.session.add(player)
             db.session.commit()
-            return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter)
+            return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id)
         except game_exceptions.GameIsFull:
             return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
 
 @socketio.on('join game')
 def handle_join_game(received_json): # TODO: flask.session can be used for checks!
-    flask_socketio.join_room(json['game_id'])
+    flask_socketio.join_room(received_json['game_id'])
+    print('someone joined game '+received_json['game_id'])
 
 @socketio.on('make move')
 def handle_make_move(received_json): # TODO: flask.session can be used for checks!
     game=Game.query.filter_by(id=received_json['game_id']).one() # TODO: missing exception handling (including valid uuid)
+    print(received_json)
+    print(game.color_string)
     move_result=game.move(received_json['coords_from'], received_json['coords_to'])
     data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
     if move_result.triggers_alert_display():
         data_to_send['alert']=move_result.message()
-    json_to_send=flask.jsonify(data_to_send)
     db.session.add(game)
     db.session.commit()
-    flask_socketio.emit('move made', json_to_send, room=game.id)
+    flask_socketio.emit('move made', data_to_send, room=received_json['game_id'])
+    print('sent json to '+received_json['game_id'])
+    print(data_to_send)
 
 @app.route('/game/<game_id>/position', methods=['GET'])
 def game_position(game_id):

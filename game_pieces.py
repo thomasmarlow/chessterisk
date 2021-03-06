@@ -1,4 +1,6 @@
 import string
+import game_colors
+import random
 from game_exceptions import NoSuchPieceSubtype
 
 class Piece:
@@ -13,7 +15,7 @@ class Piece:
         raise NoSuchPieceSubtype()
 
     def __init__(self, as_string, row, col):
-        self.color=Color(as_string_or_char=as_string[0])
+        self.color=game_colors.Color(as_string_or_char=as_string[0])
         self.row=row
         self.col=col
     
@@ -44,13 +46,13 @@ class Master(Piece):
 class Numbered(Piece):
     def __init__(self, as_string, row, col):
         self.number=int(as_string[1])
-        super().__init__()
+        super().__init__(as_string, row, col)
 
     def possible_moves(self):
         if self.number%2==0:
-            self.get_straight_moves(distance=1)
+            return self.get_straight_moves(distance=1)
         else:
-            self.get_diagonal_moves(distance=1)
+            return self.get_diagonal_moves(distance=1)
 
     def as_string(self):
         return self.color.as_char()+str(self.number)
