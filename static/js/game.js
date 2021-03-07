@@ -1,5 +1,6 @@
 var board_grid = []
 // var position_string = 'bk'
+var info_fade_out_ms = 5000
 var color_of_turn = ''
 var socket
 var audio_capture
@@ -242,6 +243,7 @@ $(document).ready(function() {
     is_spectator = ($('#board-main').attr('data-is-viewer') == 'True')
     if ( is_viewer() && $('#board-main').attr('data-winner') == 'None' ) {
         $('#board-info-display').text('entered as spectator')
+        // $('#board-info-display').fadeTo(info_fade_out_ms, 0)
     }
     socket = io();
     socket.emit('join game', {game_id: $('#board-main').attr('data-game-id')})
@@ -260,11 +262,11 @@ $(document).ready(function() {
                 audio_block.play()
             }
         } else {
-            $('#board-info-display').removeClass('alert-dark')
-            $('#board-info-display').removeClass('alert-primary')
-            $('#board-info-display').removeClass('alert-danger')
-            $('#board-info-display').addClass('alert-dark')
-            $('#board-info-display').text('...')
+            // $('#board-info-display').removeClass('alert-dark')
+            // $('#board-info-display').removeClass('alert-primary')
+            // $('#board-info-display').removeClass('alert-danger')
+            // $('#board-info-display').addClass('alert-dark')
+            // $('#board-info-display').text('...')
             audio_move.play()
         }
         if (json_received.hasOwnProperty('winner_color')) {
@@ -276,16 +278,19 @@ $(document).ready(function() {
         $('#board-main').attr('data-is-viewer', 'True')
         render_board()
     })
+    if ( $('#board-main').attr('data-winner') == 'None' ) {
+        $('#board-info-display').fadeTo(info_fade_out_ms, 0)
+    }
     // set_initial_message();
 });
 
-const set_initial_message = () => {
-    if ( $('#board-main').attr('data-is-inviter') != "" ) {
-        $('#board-info-display').text('share your url with your friend')
-        return
-    }
-    $('#board-info-display').text('entered game by invitation')
-}
+// const set_initial_message = () => {
+//     if ( $('#board-main').attr('data-is-inviter') != "" ) {
+//         $('#board-info-display').text('share your url with your friend')
+//     } else {
+//         $('#board-info-display').text('entered game by invitation')
+//     }
+// }
 
 const display_attack_result = (attack_result) => {
     if (attack_result.split(' ')[0] == 'red') {
@@ -299,13 +304,16 @@ const display_attack_result = (attack_result) => {
         $('#board-info-display').removeClass('alert-danger')
         $('#board-info-display').addClass('alert-primary')
     }
+    $('#board-info-display').fadeTo(0, 1)
     $('#board-info-display').text(attack_result)
+    $('#board-info-display').fadeTo(info_fade_out_ms, 0)
 }
 
 const display_winner = (winner_color) => {
     $('#board-info-display').removeClass('alert-dark')
     $('#board-info-display').removeClass('alert-primary')
     $('#board-info-display').removeClass('alert-danger')
+    $('#board-info-display').fadeTo(0, 1)
     if (winner_color == 'red') {
         $('#board-info-display').addClass('alert-danger')
         $('#board-info-display').text('red won!')
@@ -432,6 +440,7 @@ const is_viewer = () => {
 
 const check_if_winner = () => {
     if ( $('#board-main').attr('data-winner') == 'red' ) {
+        $('#board-info-display').fadeTo(0, 1)
         $('#board-info-display').removeClass('alert-dark')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
@@ -440,6 +449,7 @@ const check_if_winner = () => {
         disable_all_squares()
     }
     if ( $('#board-main').attr('data-winner') == 'blue' ) {
+        $('#board-info-display').fadeTo(0, 1)
         $('#board-info-display').removeClass('alert-dark')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
