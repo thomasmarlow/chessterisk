@@ -1,7 +1,9 @@
 .board-square {
-    height: 12vmin;
-    width: 12vmin;
-    font-size: 8vmin;
+    height: 15vmin;
+    width: 15vmin;
+    max-height: 10vh;
+    max-width: 10vh;
+    font-size: min(10vmin, 7vh);
     line-height: 0;
     padding: 0% !important;
 }
@@ -11,8 +13,9 @@
 }
 
 #board-info-display {
-    font-size: 4vmin;
+    /* font-size: 4vmin; */
     line-height: 4vmin;
+    font-size: min(5vmin, 4vh);
 }
 
 .grad-blue-bottom {
