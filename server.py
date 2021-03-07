@@ -31,7 +31,7 @@ def home():
         db.session.commit()
         flask.session['guest_id'] = new_guest.id
         print("NEW GUEST ID {}".format(flask.session['guest_id']))
-    return flask.render_template('home.html')
+    return flask.render_template('home.html', last_updated=dir_last_updated('static'))
 
 @app.route('/newgame/invite', methods=['GET'])
 def newgame_invite():
@@ -88,12 +88,12 @@ def game(game_id): # TODO: delegation went on vacation, huh?
     #     pass # TODO
     try: # we first check if the guest is already in this game
         player=game.get_player(guest_id=flask.session['guest_id'])
-        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id, winner=game.winner_color_string)
+        return flask.render_template('game.html', color='red' if player.is_red else 'blue', is_inviter=player.is_inviter, game_id=game_id, winner=game.winner_color_string, last_updated=dir_last_updated('static'))
     except game_exceptions.NoSuchPlayerInGame:
         if game.is_full():
-            return flask.render_template('game.html', is_viewer='True', color=random.choice(['red', 'blue']), is_inviter=False, game_id=game_id, winner=game.winner_color_string)
+            return flask.render_template('game.html', is_viewer='True', color=random.choice(['red', 'blue']), is_inviter=False, game_id=game_id, winner=game.winner_color_string, last_updated=dir_last_updated('static'))
         else: # the guest registers as player if they make a move
-            return flask.render_template('game.html', color='blue' if game.player_a.is_red else 'red', is_inviter=False, game_id=game_id, winner=game.winner_color_string)
+            return flask.render_template('game.html', color='blue' if game.player_a.is_red else 'red', is_inviter=False, game_id=game_id, winner=game.winner_color_string, last_updated=dir_last_updated('static'))
         # try: # if it isn't, we try to make it into a player
         #     new_guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
         #     player=game.add_player(guest=new_guest)
@@ -163,14 +163,14 @@ def game_position(game_id):
     json_to_send=flask.jsonify(data_to_send)
     return json_to_send
 
-@app.route('/test/<side>', methods=['GET', 'POST'])
-def test(side):
-    if flask.request.method == 'POST':
-        return 'POST to game'
-    else:
-        if not (side in ['red', 'blue']):
-            return flask.redirect(flask.url_for('home'))
-        return flask.render_template('game.html', side=side)
+# @app.route('/test/<side>', methods=['GET', 'POST'])
+# def test(side):
+#     if flask.request.method == 'POST':
+#         return 'POST to game'
+#     else:
+#         if not (side in ['red', 'blue']):
+#             return flask.redirect(flask.url_for('home'))
+#         return flask.render_template('game.html', side=side)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -182,6 +182,11 @@ def is_valid_uuid(uuid_to_test, version=4): # TODO: move to better place, utils.
     except ValueError:
         return False
     return str(uuid_obj) == uuid_to_test
+
+def dir_last_updated(folder):
+    return str(max(os.path.getmtime(os.path.join(root_path, f))
+                   for root_path, dirs, files in os.walk(folder)
+                   for f in files))
 
 if __name__ == '__main__':
     # game_manager=server_utils.GameManager()

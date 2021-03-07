@@ -315,7 +315,7 @@ const board_square_set = (row, col, piece_string) => {
         board_square.removeClass('btn-outline-secondary')
         board_square.removeClass('disabled')
     }
-    board_square.text(get_piece_symbol(piece_string)) // TODO get_piece_symbol()
+    set_piece_symbol(board_square, piece_string)
     if (get_piece_color(piece_string) == board_side) {
         board_square.addClass('board-ally-piece')
     } else {
@@ -328,11 +328,12 @@ const board_square_set = (row, col, piece_string) => {
     }
 }
 
-const get_piece_symbol = (piece_string) => {
+const set_piece_symbol = (board_square, piece_string) => {
     if (piece_string.charAt(1) == 'k') {
-        return '♚'
+        board_square.append('<i class="fas fa-crown" style="font-size: 5vmin;"></i>')
+    } else {
+        board_square.text(piece_string.charAt(1))
     }
-    return piece_string.charAt(1)
 }
 
 const get_piece_color = (piece_string) => {
@@ -427,6 +428,7 @@ const reset_whole_board = () => {
         $(this).text('')
         $(this).addClass('btn board-square board-empty-square btn-outline-secondary disabled')
     });
+    $('.board-square').empty()
 }
 
 // const board_square_set = (row, col, board_square_data) => {

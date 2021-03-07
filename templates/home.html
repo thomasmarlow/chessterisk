@@ -8,16 +8,16 @@
     <div class="home-title">new game</div>
     <button id="home-play-random" type="button" class="m-1 btn home-button btn-outline-dark disabled">play against anyone</button>
     <button id="home-invite" type="button" class="m-1 btn home-button btn-success disabled">play with a friend</button>
-    <button id="home-test-red" type="button" class="m-1 btn home-button btn-danger">test as red</button>
-    <button id="home-test-blue" type="button" class="m-1 btn home-button btn-info">test as blue</button>
+    <!-- <button id="home-test-red" type="button" class="m-1 btn home-button btn-danger">test as red</button>
+    <button id="home-test-blue" type="button" class="m-1 btn home-button btn-info">test as blue</button> -->
   </div>
 </div>
 {% endblock content %}
 
 {% block styles %}
-<link href="{{ url_for('static', filename='css/home.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/home.css') }}?u={{ last_updated }}" rel="stylesheet">
 {% endblock styles %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+<script src="{{ url_for('static', filename='js/home.js') }}?u={{ last_updated }}"></script>
 {% endblock scripts %}

@@ -120,11 +120,12 @@
 {% endblock content %}
 
 {% block styles %}
-<link href="{{ url_for('static', filename='css/game.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/game.css') }}?u={{ last_updated }}" rel="stylesheet">
 {% endblock styles %}
 
 {% block scripts %}
 <!-- <script src="/socket.io/socket.io.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.2/socket.io.js" integrity="sha512-YybopSVjZU0fe8TY4YDuQbP5bhwpGBE/T6eBUEZ0usM72IWBfWrgVI13qfX4V2A/W7Hdqnm7PIOYOwP9YHnICw==" crossorigin="anonymous"></script>
-<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+<script src="{{ url_for('static', filename='js/game.js') }}?u={{ last_updated }}"></script>
 {% endblock scripts %}

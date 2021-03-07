@@ -1,12 +1,12 @@
 .board-square {
-    height: 9vmin;
-    width: 9vmin;
-    font-size: 6vmin;
-    line-height: 6vmin;
-    padding:0% !important;
+    height: 12vmin;
+    width: 12vmin;
+    font-size: 8vmin;
+    line-height: 0;
+    padding: 0% !important;
 }
 
 #board-info-display {
-    font-size: 3vmin;
-    line-height: 3vmin;
+    font-size: 4vmin;
+    line-height: 4vmin;
 }
