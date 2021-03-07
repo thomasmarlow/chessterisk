@@ -2,6 +2,8 @@ var board_grid = []
 // var position_string = 'bk'
 var color_of_turn = ''
 var socket
+var audio_attack
+var audio_move
 var is_spectator = false
 var min_row = 0
 var max_row = 6
@@ -222,6 +224,8 @@ const test_logger = (to_log) => {
 };
 
 $(document).ready(function() {
+    audio_attack = $('#audio-rasp')[0]
+    audio_move = $('#audio-pop')[0]
     board_side = get_board_side()
     if (board_side == "red") {
         board_ally_styling = board_red_styling
@@ -246,12 +250,14 @@ $(document).ready(function() {
         render_board()
         if (json_received.hasOwnProperty('attack_result')) {
             display_attack_result(json_received.attack_result)
+            audio_attack.play()
         } else {
             $('#board-info-display').removeClass('alert-dark')
             $('#board-info-display').removeClass('alert-primary')
             $('#board-info-display').removeClass('alert-danger')
             $('#board-info-display').addClass('alert-dark')
             $('#board-info-display').text('...')
+            audio_move.play()
         }
         if (json_received.hasOwnProperty('winner_color')) {
             display_winner(json_received.winner_color)
@@ -363,6 +369,7 @@ const get_position = () => { // could be replaced by 'join game'
 
 const render_board = () => {
     reset_whole_board()
+    paint_bg_gradient()
     for (let row = min_row; row < max_row; row++) {
         for (let col = min_col; col < max_col; col++) {
             if (board_side == 'red') {
@@ -383,6 +390,30 @@ const render_board = () => {
         disable_all_squares()
     }
     check_if_winner()
+}
+
+const paint_bg_gradient = () => {
+    if (board_side == 'red') {
+        if (color_of_turn == 'red') {
+            board_set_bg('grad-red-bottom')
+        } else {
+            board_set_bg('grad-blue-top')
+        }
+    } else {
+        if (color_of_turn == 'red') {
+            board_set_bg('grad-red-top')
+        } else {
+            board_set_bg('grad-blue-bottom')
+        }
+    }
+}
+
+const board_set_bg = (grad_class) => {
+    $('#board-bg').removeClass('grad-red-bottom')
+    $('#board-bg').removeClass('grad-red-top')
+    $('#board-bg').removeClass('grad-blue-bottom')
+    $('#board-bg').removeClass('grad-blue-top')
+    $('#board-bg').addClass(grad_class)
 }
 
 const is_viewer = () => {

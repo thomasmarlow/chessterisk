@@ -2,7 +2,7 @@
 
 {% block content %}
 <!-- Page Content -->
-<div class="d-flex justify-content-center align-items-center" style="height: 85vh; flex-direction: column;">
+<div id="board-bg" class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 56px); flex-direction: column;">
   <div id="board-info-display" class="alert alert-dark" role="alert">
     {% if winner %}
       game ended; {{ winner }} won
@@ -12,7 +12,7 @@
       entered game by invitation
     {% endif %}
   </div>
-  <div id="board-main" class="shadow-lg py-2 px-4" data-color="{{ color }}" data-game-id="{{ game_id }}" data-winner="{{ winner }}" data-is-viewer="{{ is_viewer }}">
+  <div id="board-main" class="shadow-lg py-2 px-4 mb-5" data-color="{{ color }}" data-game-id="{{ game_id }}" data-winner="{{ winner }}" data-is-viewer="{{ is_viewer }}">
     <div class="row justify-content-center">
       <div class="col-auto m-0 p-1">
         <button id="board-square-5-0" type="button" class="btn board-square board-empty-square btn-outline-secondary disabled"></button>
@@ -129,3 +129,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 <script src="{{ url_for('static', filename='js/game.js') }}?u={{ last_updated }}"></script>
 {% endblock scripts %}
+
+{% block audio %}
+<audio id="audio-rasp" src="{{ url_for('static', filename='audio/rasp.wav') }}?u={{ last_updated }}"></audio>
+<audio id="audio-pop" src="{{ url_for('static', filename='audio/pop.wav') }}?u={{ last_updated }}"></audio>
+{% endblock audio %}
