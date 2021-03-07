@@ -1,7 +1,7 @@
 # chessterisk*
-*"A chess-like online board game, with RNG-based initial position and capturing efficacy."*
+*"A chess-like RNG-based online board game."*
 
-Limited testing version running on https://chessterisk.herokuapp.com/
+Currently running on https://chessterisk.herokuapp.com/
 
 #### Looks, as of now:
 
@@ -9,21 +9,20 @@ Limited testing version running on https://chessterisk.herokuapp.com/
 
 ## TODOs:
 
-##### Remaining until next release
-- [x] Integration with SocketIO
-- [ ] Fix game invite issue
-- [ ] Add possible game endings to `game_move_results`
-- [ ] Add frontend turn tracking + alert messages (block users from selecting pieces when it's not their turn)
-- [ ] Replace king symbol for https://fontawesome.com/icons/crown?style=solid
-- [ ] 10k row cap: set max. amount of simultaneously persisted games, players and guests (include creation_time in tables and wipe db periodically?)
-- [ ] 2nd deployment (adding Postgres DB + probably tweaking gunicorn settings)
-
 ##### Next up
+- [ ] Track last move for each game
+- [ ] 10k row cap: set max. amount of simultaneously persisted games, players and guests (include creation_time in tables and wipe db periodically?)
+- [ ] Add frontend gradient for turn tracking
+- [ ] Add draw recognition
+- [ ] Add draw proposal feature
+- [ ] Add rematch feature
+- [ ] Add sounds for moves, attacks (captures and blocks) and ending.
+- [ ] Add metadata and favicon
 - [ ] Check and fix/refactor all TODOs
-- [ ] Automatch feature
+- [ ] Add automatch feature
 - [ ] Organise `*.py`s into module/package structure
-- [ ] Add error views instead of redirecting to `/home`
-- [ ] Enhance board sizing (`vmin`?)
+- [ ] Add error handling for `request` related issues
+- [ ] Enhance board sizing
 - [ ] Add `/rules` and `/about`
 
 ##### Down the road
