@@ -2,7 +2,8 @@ var board_grid = []
 // var position_string = 'bk'
 var color_of_turn = ''
 var socket
-var audio_attack
+var audio_capture
+var audio_block
 var audio_move
 var is_spectator = false
 var min_row = 0
@@ -224,7 +225,8 @@ const test_logger = (to_log) => {
 };
 
 $(document).ready(function() {
-    audio_attack = $('#audio-rasp')[0]
+    audio_capture = $('#audio-rasp')[0]
+    audio_block = $('#audio-clack')[0]
     audio_move = $('#audio-pop')[0]
     board_side = get_board_side()
     if (board_side == "red") {
@@ -250,7 +252,12 @@ $(document).ready(function() {
         render_board()
         if (json_received.hasOwnProperty('attack_result')) {
             display_attack_result(json_received.attack_result)
-            audio_attack.play()
+            if ('captures:' == json_received.attack_result.split(' ')[1]) {
+                audio_capture.play()
+            }
+            if ('blocks:' == json_received.attack_result.split(' ')[1]) {
+                audio_block.play()
+            }
         } else {
             $('#board-info-display').removeClass('alert-dark')
             $('#board-info-display').removeClass('alert-primary')
