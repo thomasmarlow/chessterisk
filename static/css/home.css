@@ -3,7 +3,8 @@
 }
 
 .home-title {
-    font-size: 4vmin
+    font-size: 4vmin;
+    text-align: right;
 }
 
 #home-welcome-text {
