@@ -18,7 +18,7 @@ var board_blue_styling = 'btn-info'
 var board_side = "blue"
 
 $('#board-main').on('click', '.board-ally-piece', function() {
-    if ($(this).hasClass('disabled')) {
+    if ($(this).hasClass('board-square-disabled')) {
         return
     }
     board_deselect_all()
@@ -450,8 +450,10 @@ const check_if_winner = () => {
 
 const disable_all_squares = () => {
     $('.board-square').each(function() {
-        if (!($(this).hasClass('disabled'))) {
+        if ($(this).hasClass('board-empty-square')) {
             $(this).addClass('disabled')
+        } else {
+            $(this).addClass('board-square-disabled')
         }
     });
 }
