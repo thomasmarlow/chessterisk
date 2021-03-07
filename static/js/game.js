@@ -34,8 +34,8 @@ $('#board-main').on('click', '.board-selected', function() {
 
 const board_deselect_all = () => {
     $('.board-ally-piece').each(function () {
-        if ($(this).hasClass('btn-dark')) {
-            $(this).removeClass('btn-dark')
+        if ($(this).hasClass('btn-warning')) {
+            $(this).removeClass('btn-warning')
             $(this).removeClass('board-selected')
             $(this).addClass(board_ally_styling)
         }
@@ -46,12 +46,12 @@ const board_reset_all_movable = () => {
     $('.board-movable-square').each(function () {
         $(this).removeClass('board-movable-square')
         if ($(this).hasClass('board-empty-square')) {
-            $(this).removeClass('btn-secondary')
+            $(this).removeClass('btn-dark')
             $(this).addClass('btn-outline-secondary')
             $(this).addClass('disabled')
         }
         if ($(this).hasClass('board-enemy-piece')) {
-            $(this).removeClass('btn-warning')
+            $(this).removeClass('btn-dark')
             $(this).addClass(board_enemy_styling)
         }
     });
@@ -61,7 +61,7 @@ const board_select = (square_to_select) => {
     if (square_to_select.hasClass(board_ally_styling)) {
         square_to_select.removeClass(board_ally_styling)
     }
-    square_to_select.addClass('btn-dark')
+    square_to_select.addClass('btn-warning')
     square_to_select.addClass('board-selected')
 };
 
@@ -140,13 +140,13 @@ const board_movable_if_applies = (row, col) => {
         test_logger('in empty')
         square.removeClass('btn-outline-secondary')
         square.removeClass('disabled')
-        square.addClass('btn-secondary')
+        square.addClass('btn-dark')
         square.addClass('board-movable-square')
     }
     if (square.hasClass('board-enemy-piece')) {
         test_logger('in enemy')
         square.removeClass(board_enemy_styling)
-        square.addClass('btn-warning')
+        square.addClass('btn-dark')
         square.addClass('board-movable-square')
     }
 }
@@ -167,6 +167,7 @@ $('#board-main').on('click', '.board-movable-square', function () {
             coords_from: get_coords_string(selected_ally_piece),
             coords_to: get_coords_string($(this))
         })
+        $('.board-square').addClass('board-square-disabled')
         // board_make_move(selected_ally_piece, $(this))
         // board_reset_all_movable()
     }
@@ -184,35 +185,35 @@ const get_coords_string = (square) => {
     return row.toString()+col.toString()
 }
 
-const board_make_move = (selected_ally_piece, movable_square) => {
-    let can_move = false
-    if (movable_square.hasClass('board-empty-square')) {
-        movable_square.removeClass('board-empty-square')
-        movable_square.removeClass('board-movable-square')
-        movable_square.removeClass('btn-secondary')
-        can_move = true
-    }
-    if (movable_square.hasClass('board-enemy-piece')) {
-        can_move = board_attack(selected_ally_piece, movable_square)
-        if (can_move) {
-            movable_square.removeClass('board-enemy-piece')
-            movable_square.removeClass('board-movable-square')
-            movable_square.removeClass('btn-warning')
-        }
-    }
-    if (can_move) {
-        movable_square.addClass('board-ally-piece')
-        movable_square.addClass(board_ally_styling)
-        selected_ally_piece.removeClass('board-ally-piece')
-        selected_ally_piece.removeClass('btn-dark')
-        selected_ally_piece.removeClass('board-selected')
-        selected_ally_piece.addClass('board-empty-square')
-        selected_ally_piece.addClass('btn-outline-secondary')
-        selected_ally_piece.addClass('disabled')
-        movable_square.text(selected_ally_piece.text())
-        selected_ally_piece.text('')
-    }
-};
+// const board_make_move = (selected_ally_piece, movable_square) => {
+//     let can_move = false
+//     if (movable_square.hasClass('board-empty-square')) {
+//         movable_square.removeClass('board-empty-square')
+//         movable_square.removeClass('board-movable-square')
+//         movable_square.removeClass('btn-secondary')
+//         can_move = true
+//     }
+//     if (movable_square.hasClass('board-enemy-piece')) {
+//         can_move = board_attack(selected_ally_piece, movable_square)
+//         if (can_move) {
+//             movable_square.removeClass('board-enemy-piece')
+//             movable_square.removeClass('board-movable-square')
+//             movable_square.removeClass('btn-warning')
+//         }
+//     }
+//     if (can_move) {
+//         movable_square.addClass('board-ally-piece')
+//         movable_square.addClass(board_ally_styling)
+//         selected_ally_piece.removeClass('board-ally-piece')
+//         selected_ally_piece.removeClass('btn-dark')
+//         selected_ally_piece.removeClass('board-selected')
+//         selected_ally_piece.addClass('board-empty-square')
+//         selected_ally_piece.addClass('btn-outline-secondary')
+//         selected_ally_piece.addClass('disabled')
+//         movable_square.text(selected_ally_piece.text())
+//         selected_ally_piece.text('')
+//     }
+// };
 
 const board_attack = (selected_ally_piece, movable_square) => {
     return true

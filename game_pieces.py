@@ -1,5 +1,6 @@
 import string
 import game_colors
+import game_constants
 import random
 from game_exceptions import NoSuchPieceSubtype
 
@@ -60,7 +61,7 @@ class Numbered(Piece):
     def score(self, is_attacker):
         random.seed()
         score=random.random()*self.number
-        return (3/2)*score if is_attacker else score
+        return round((3/2)*score if is_attacker else score, game_constants.SCORE_DECIMALS)
 
 class NoPiece: # null object
     def __init__(self, row, col, as_string=None):
