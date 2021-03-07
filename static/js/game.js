@@ -87,7 +87,7 @@ const board_make_movable_squares_for = (selected_ally_piece) => {
     let self_row = parseInt(selected_ally_piece.attr('id').split('-')[2])
     let self_col = parseInt(selected_ally_piece.attr('id').split('-')[3])
     test_logger({'row_parsed': self_row, 'col_parsed': self_col})
-    if (selected_ally_piece.text() == '♚') {
+    if (selected_ally_piece.hasClass('master-piece')) {
         board_make_movable_squares_for_master(self_row, self_col)
     } else {
         board_make_movable_squares_for_numbered(self_row, self_col, parseInt(selected_ally_piece.text()))
@@ -344,6 +344,7 @@ const board_square_set = (row, col, piece_string) => {
 const set_piece_symbol = (board_square, piece_string) => {
     if (piece_string.charAt(1) == 'k') {
         board_square.append('<i class="fas fa-crown" style="font-size: 5vmin;"></i>')
+        board_square.addClass('master-piece')
     } else {
         board_square.text(piece_string.charAt(1))
     }
@@ -424,11 +425,6 @@ const board_set_bg = (grad_class) => {
 }
 
 const is_viewer = () => {
-    // console.log('is viewer', $('#board-main').attr('data-is-viewer'), $('#board-main').attr('data-is-viewer') == 'True')
-    // if ( $('#board-main').attr('data-is-viewer') == 'True' ) {
-    //     return true
-    // }
-    // return false
     console.log('is spectator: ', is_spectator)
     return is_spectator
 }
@@ -469,168 +465,7 @@ const reset_whole_board = () => {
     $('.board-square').empty()
 }
 
-// const board_square_set = (row, col, board_square_data) => {
-//     test_logger([row, col, board_square_data])
-//     let board_square = $(`#board-square-${row}-${col}`)
-//     if (board_square_data.type == 'empty') {
-//         board_square.addClass('board-empty-square')
-//         board_square.addClass('btn-outline-secondary')
-//         board_square.addClass('disabled')
-//         return
-//     } else {
-//         board_square.removeClass('board-empty-square')
-//         board_square.removeClass('btn-outline-secondary')
-//         board_square.removeClass('disabled')
-//     }
-//     board_square.text(board_square_data.text)
-//     if (board_square_data.type == board_side) {
-//         board_square.addClass('board-ally-piece')
-//     } else {
-//         board_square.addClass('board-enemy-piece')
-//     }
-//     if (board_square_data.type == 'red') {
-//         board_square.addClass(board_red_styling)
-//     } else {
-//         board_square.addClass(board_blue_styling)
-//     }
-// }
-
 const get_board_side = () => {
     test_logger(['side', $('#board-main').attr('data-color')]) // TODO: rename all 'side' to 'color'
     return $('#board-main').attr('data-color')
-}
-
-const self_generate_board_grid = () => {
-    for (let row = 0; row < 6; row++) {
-        board_grid[row] = []
-    }
-    board_grid[0][0] = {
-        'type': 'red',
-        'text': '5',
-        'row': 0,
-        'col': 0
-    }
-    board_grid[0][1] = {
-        'type': 'red',
-        'text': '6',
-        'row': 0,
-        'col': 1
-    }
-    board_grid[0][2] = {
-        'type': 'red',
-        'text': '7',
-        'row': 0,
-        'col': 2
-    }
-    board_grid[0][3] = {
-        'type': 'red',
-        'text': '8',
-        'row': 0,
-        'col': 3
-    }
-    board_grid[0][4] = {
-        'type': 'red',
-        'text': '9',
-        'row': 0,
-        'col': 4
-    }
-    board_grid[1][0] = {
-        'type': 'red',
-        'text': '♚',
-        'row': 1,
-        'col': 0
-    }
-    board_grid[1][1] = {
-        'type': 'red',
-        'text': '1',
-        'row': 1,
-        'col': 1
-    }
-    board_grid[1][2] = {
-        'type': 'red',
-        'text': '2',
-        'row': 1,
-        'col': 2
-    }
-    board_grid[1][3] = {
-        'type': 'red',
-        'text': '3',
-        'row': 1,
-        'col': 3
-    }
-    board_grid[1][4] = {
-        'type': 'red',
-        'text': '4',
-        'row': 1,
-        'col': 4
-    }
-    for (let row = 2; row < 4; row++) {
-        for (let col = 0; col < 5; col++) {
-            board_grid[row][col] = {
-                'type': 'empty',
-                'row': row,
-                'col': col
-            }
-        }
-    }
-    board_grid[4][0] = {
-        'type': 'blue',
-        'text': '5',
-        'row': 4,
-        'col': 0
-    }
-    board_grid[4][1] = {
-        'type': 'blue',
-        'text': '6',
-        'row': 4,
-        'col': 1
-    }
-    board_grid[4][2] = {
-        'type': 'blue',
-        'text': '7',
-        'row': 4,
-        'col': 2
-    }
-    board_grid[4][3] = {
-        'type': 'blue',
-        'text': '8',
-        'row': 4,
-        'col': 3
-    }
-    board_grid[4][4] = {
-        'type': 'blue',
-        'text': '9',
-        'row': 4,
-        'col': 4
-    }
-    board_grid[5][0] = {
-        'type': 'blue',
-        'text': '♚',
-        'row': 5,
-        'col': 0
-    }
-    board_grid[5][1] = {
-        'type': 'blue',
-        'text': '1',
-        'row': 5,
-        'col': 1
-    }
-    board_grid[5][2] = {
-        'type': 'blue',
-        'text': '2',
-        'row': 5,
-        'col': 2
-    }
-    board_grid[5][3] = {
-        'type': 'blue',
-        'text': '3',
-        'row': 5,
-        'col': 3
-    }
-    board_grid[5][4] = {
-        'type': 'blue',
-        'text': '4',
-        'row': 5,
-        'col': 4
-    }
 }
