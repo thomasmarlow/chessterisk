@@ -3,21 +3,16 @@
 
 Currently running on https://chessterisk.herokuapp.com/
 
-#### Looks, as of now:
-
-![Getting somewhere](https://media.giphy.com/media/jgH1X6U5U7EiQJtAHu/giphy.gif)
-
 ## TODOs:
 
 ##### Next up
 - [ ] Track last move for each game
 - [ ] 10k row cap: set max. amount of simultaneously persisted games, players and guests (include creation_time in tables and wipe db periodically?)
-- [ ] Add frontend gradient for turn tracking
 - [ ] Add draw recognition
 - [ ] Add draw proposal feature
 - [ ] Add rematch feature
-- [ ] Add sounds for moves, attacks (captures and blocks) and ending.
-- [ ] Add metadata and favicon
+- [ ] Manage different SocketIO rooms for each player
+- [ ] Add sound for game endings
 - [ ] Check and fix/refactor all TODOs
 - [ ] Add automatch feature
 - [ ] Organise `*.py`s into module/package structure
