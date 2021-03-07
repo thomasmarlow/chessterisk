@@ -20,20 +20,20 @@
 
 .grad-blue-bottom {
     background: rgb(121,218,255);
-    background: linear-gradient(0deg, rgba(121,218,255,1) 0%, rgba(255,255,255,1) 30%); /*switch to 180deg for up to down*/
+    background: linear-gradient(0deg, rgba(121,218,255,1) 0%, rgba(255,255,255,1) 23vmin); /*switch to 180deg for up to down*/
 }
 
 .grad-red-bottom {
     background: rgb(255,132,132);
-    background: linear-gradient(0deg, rgba(255,132,132,1) 0%, rgba(255,255,255,1) 30%);
+    background: linear-gradient(0deg, rgba(255,132,132,1) 0%, rgba(255,255,255,1) 23vmin);
 }
 
 .grad-blue-top {
     background: rgb(121,218,255);
-    background: linear-gradient(180deg, rgba(121,218,255,1) 0%, rgba(255,255,255,1) 30%); /*switch to 180deg for up to down*/
+    background: linear-gradient(180deg, rgba(121,218,255,1) 0%, rgba(255,255,255,1) 23vmin); /*switch to 180deg for up to down*/
 }
 
 .grad-red-top {
     background: rgb(255,132,132);
-    background: linear-gradient(180deg, rgba(255,132,132,1) 0%, rgba(255,255,255,1) 30%);
+    background: linear-gradient(180deg, rgba(255,132,132,1) 0%, rgba(255,255,255,1) 23vmin);
 }
