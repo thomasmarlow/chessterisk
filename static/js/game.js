@@ -366,7 +366,7 @@ const board_square_set = (row, col, piece_string) => {
 
 const set_piece_symbol = (board_square, piece_string) => {
     if (piece_string.charAt(1) == 'k') {
-        board_square.append('<i class="fas fa-crown" style="font-size: min(8vmin, 5vh)"></i>')
+        board_square.append('<i class="fas fa-crown" style="font-size: min(6vmin, 5vh)"></i>')
         board_square.addClass('master-piece')
     } else {
         board_square.text(piece_string.charAt(1))
