@@ -14,6 +14,7 @@ class Game(db.Model):
     player_a_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=True)
     player_b_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=True)
     position_string = db.Column(db.String(90), nullable=False)
+    last_move_coords = db.Column(db.String(4), nullable=True)
     color_string = db.Column(db.String(10), nullable=False)
     winner_color_string = db.Column(db.String(10), nullable=True)
 
@@ -56,6 +57,7 @@ class Game(db.Model):
         move_result=position.move(string_coords_from, string_coords_to)
         self.position_string=position.as_string
         self.color_string=position.color_of_turn.string
+        self.last_move_coords = string_coords_from + string_coords_to
         if move_result.__class__==game_move_results.GameHasEnded:
             self.winner_color_string=move_result.winner_color_string
         return move_result

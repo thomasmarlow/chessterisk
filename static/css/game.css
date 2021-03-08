@@ -38,6 +38,11 @@
     background: linear-gradient(180deg, rgba(255,132,132,1) 0%, rgba(255,255,255,1) 23vmin);
 }
 
+.board-square-last-move {
+    border: calc(3 * min(2vmin, 1vh) / 4) solid !important;
+    border-color: #b3ff20 !important;
+}
+
 
 
 

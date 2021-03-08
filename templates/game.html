@@ -3,7 +3,7 @@
 {% block content %}
 <!-- Page Content -->
 <div id="board-bg" class="d-flex justify-content-center align-items-center" style="height: calc(100% - 56px); width: 100%; z-index: -1; flex-direction: column; position: fixed;">
-  <div id="board-info-display" class="alert alert-dark" role="alert">
+  <div id="board-info-display" class="alert alert-light" role="alert">
     {% if winner %}
       game ended; {{ winner }} won
     {% elif is_inviter %}
@@ -134,4 +134,5 @@
 <audio id="audio-rasp" src="{{ url_for('static', filename='audio/rasp.wav') }}?u={{ last_updated }}"></audio>
 <audio id="audio-pop" src="{{ url_for('static', filename='audio/pop.wav') }}?u={{ last_updated }}"></audio>
 <audio id="audio-clack" src="{{ url_for('static', filename='audio/clack.wav') }}?u={{ last_updated }}"></audio>
+<audio id="audio-conclusion" src="{{ url_for('static', filename='audio/conclusion.wav') }}?u={{ last_updated }}"></audio>
 {% endblock audio %}

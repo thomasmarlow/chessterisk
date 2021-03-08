@@ -1,6 +1,7 @@
 var board_grid = []
 // var position_string = 'bk'
 var info_fade_out_ms = 5000
+var info_stay_ms = 1000
 var color_of_turn = ''
 var socket
 var audio_capture
@@ -227,6 +228,7 @@ const test_logger = (to_log) => {
 };
 
 $(document).ready(function() {
+    audio_conclusion = $('#audio-conclusion')[0]
     audio_capture = $('#audio-rasp')[0]
     audio_block = $('#audio-clack')[0]
     audio_move = $('#audio-pop')[0]
@@ -253,6 +255,13 @@ $(document).ready(function() {
         color_of_turn=json_received.color_of_turn
         console.log('json_received')
         render_board()
+        if (board_side == 'red') {
+            display_last_move(json_received.last_move[0], json_received.last_move[1])
+            display_last_move(json_received.last_move[2], json_received.last_move[3])
+        } else {
+            display_last_move(max_row-parseInt(json_received.last_move[0])-1, max_col-parseInt(json_received.last_move[1])-1)
+            display_last_move(max_row-parseInt(json_received.last_move[2])-1, max_col-parseInt(json_received.last_move[3])-1)
+        }
         if (json_received.hasOwnProperty('attack_result')) {
             display_attack_result(json_received.attack_result)
             if ('captures:' == json_received.attack_result.split(' ')[1]) {
@@ -262,15 +271,16 @@ $(document).ready(function() {
                 audio_block.play()
             }
         } else {
-            // $('#board-info-display').removeClass('alert-dark')
+            // $('#board-info-display').removeClass('alert-light')
             // $('#board-info-display').removeClass('alert-primary')
             // $('#board-info-display').removeClass('alert-danger')
-            // $('#board-info-display').addClass('alert-dark')
+            // $('#board-info-display').addClass('alert-light')
             // $('#board-info-display').text('...')
             audio_move.play()
         }
         if (json_received.hasOwnProperty('winner_color')) {
             display_winner(json_received.winner_color)
+            audio_conclusion.play()
         }
     });
     socket.on('viewer mode', function() {
@@ -279,7 +289,9 @@ $(document).ready(function() {
         render_board()
     })
     if ( $('#board-main').attr('data-winner') == 'None' ) {
-        $('#board-info-display').fadeTo(info_fade_out_ms, 0)
+        setTimeout(function() {
+            $('#board-info-display').fadeTo(info_fade_out_ms, 0)
+        }, info_stay_ms)
     }
     // set_initial_message();
 });
@@ -294,26 +306,28 @@ $(document).ready(function() {
 
 const display_attack_result = (attack_result) => {
     if (attack_result.split(' ')[0] == 'red') {
-        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-light')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
         $('#board-info-display').addClass('alert-danger')
     } else {
-        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').removeClass('alert-light')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
         $('#board-info-display').addClass('alert-primary')
     }
-    $('#board-info-display').fadeTo(0, 1)
+    $('#board-info-display').stop(true, false).fadeTo(0, 1)
     $('#board-info-display').text(attack_result)
-    $('#board-info-display').fadeTo(info_fade_out_ms, 0)
+    setTimeout(function() {
+        $('#board-info-display').fadeTo(info_fade_out_ms, 0)
+    }, info_stay_ms)
 }
 
 const display_winner = (winner_color) => {
-    $('#board-info-display').removeClass('alert-dark')
+    $('#board-info-display').removeClass('alert-light')
     $('#board-info-display').removeClass('alert-primary')
     $('#board-info-display').removeClass('alert-danger')
-    $('#board-info-display').fadeTo(0, 1)
+    $('#board-info-display').stop(true, false).fadeTo(0, 1)
     if (winner_color == 'red') {
         $('#board-info-display').addClass('alert-danger')
         $('#board-info-display').text('red won!')
@@ -380,8 +394,21 @@ const get_position = () => { // could be replaced by 'join game'
             position_string=json_response.position
             color_of_turn=json_response.color_of_turn
             render_board()
+            if (json_response.hasOwnProperty('last_move')) {
+                if (board_side == 'red') {
+                    display_last_move(json_response.last_move[0], json_response.last_move[1])
+                    display_last_move(json_response.last_move[2], json_response.last_move[3])
+                } else {
+                    display_last_move(max_row-parseInt(json_response.last_move[0])-1, max_col-parseInt(json_response.last_move[1])-1)
+                    display_last_move(max_row-parseInt(json_response.last_move[2])-1, max_col-parseInt(json_response.last_move[3])-1)
+                }
+            }
         }
     });
+}
+
+const display_last_move = (row, col) => {
+    $(`#board-square-${row}-${col}`).addClass('board-square-last-move')
 }
 
 const render_board = () => {
@@ -440,8 +467,8 @@ const is_viewer = () => {
 
 const check_if_winner = () => {
     if ( $('#board-main').attr('data-winner') == 'red' ) {
-        $('#board-info-display').fadeTo(0, 1)
-        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').stop(true, false).fadeTo(0, 1)
+        $('#board-info-display').removeClass('alert-light')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
         $('#board-info-display').addClass('alert-danger')
@@ -449,8 +476,8 @@ const check_if_winner = () => {
         disable_all_squares()
     }
     if ( $('#board-main').attr('data-winner') == 'blue' ) {
-        $('#board-info-display').fadeTo(0, 1)
-        $('#board-info-display').removeClass('alert-dark')
+        $('#board-info-display').stop(true, false).fadeTo(0, 1)
+        $('#board-info-display').removeClass('alert-light')
         $('#board-info-display').removeClass('alert-primary')
         $('#board-info-display').removeClass('alert-danger')
         $('#board-info-display').addClass('alert-primary')

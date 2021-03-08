@@ -144,7 +144,11 @@ def handle_make_move(received_json): # TODO: flask.session can be used for check
         # print('-----------FINALLY')
         move_result=game.move(received_json['coords_from'], received_json['coords_to'])
         # print('-----------AFTER GAME MOVER')
-        data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+        data_to_send={
+            'position': game.position_string,
+            'color_of_turn': game.color_string,
+            'last_move': game.last_move_coords
+        }
         if move_result.__class__==AttackResult:
             data_to_send['attack_result']=move_result.message()
         if move_result.__class__==GameHasEnded:
@@ -159,7 +163,12 @@ def handle_make_move(received_json): # TODO: flask.session can be used for check
 @app.route('/game/<game_id>/position', methods=['GET'])
 def game_position(game_id):
     game=Game.query.filter_by(id=game_id).one() # TODO: exception handling
-    data_to_send={'position': game.position_string, 'color_of_turn': game.color_string}
+    data_to_send={
+        'position': game.position_string,
+        'color_of_turn': game.color_string
+    }
+    if game.last_move_coords:
+        data_to_send['last_move']=game.last_move_coords
     json_to_send=flask.jsonify(data_to_send)
     return json_to_send
 
