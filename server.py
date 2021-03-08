@@ -103,9 +103,58 @@ def game(game_id): # TODO: delegation went on vacation, huh?
         # except game_exceptions.GameIsFull:
         #     return flask.redirect(flask.url_for('home')) # TODO: warning alert in home; in the future a possible spectator mode
 
+@app.route('/game/<game_id>/rematch', methods=['GET'])
+def game_rematch(game_id): # TODO: check in db, not in flask.session!
+    if not 'guest_id' in flask.session: # TODO: abstract guest creation into separate function
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
+    game=Game.query.filter_by(id=game_id).one()
+    if game.is_full():
+        return flask.render_template('game.html', is_viewer='True', color=random.choice(['red', 'blue']), is_inviter=False, game_id=game_id, winner=game.winner_color_string, last_updated=dir_last_updated('static'))
+    else:
+        player=game.get_player(flask.session['guest_id'])
+        return flask.render_template('game.html', color='red' if game.player.is_red else 'blue', is_inviter=False, is_rematching=True, game_id=game_id, winner=game.winner_color_string, last_updated=dir_last_updated('static'))
+
 @socketio.on('join game')
 def handle_join_game(received_json): # TODO: flask.session can be used for checks!
     flask_socketio.join_room(received_json['game_id'])
+    # print('someone joined game '+received_json['game_id'])
+
+@socketio.on('request rematch')
+def handle_request_rematch(received_json): # TODO: flask.session can be used for checks!
+    # flask_socketio.join_room(received_json['game_id'])
+    if not 'guest_id' in flask.session: # TODO: abstract guest creation into separate function
+        new_guest = Guest()
+        db.session.add(new_guest)
+        db.session.commit()
+        flask.session['guest_id'] = new_guest.id
+        print("NEW GUEST ID {}".format(flask.session['guest_id']))
+    try:
+        game=Game.query.filter_by(id=received_json['game_id']).one()
+    except NoResultFound:
+        game=Game()
+        player=Player(is_rematching=True)
+        player.is_red=random.choice([True, False])
+        player.guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
+        game.player_a=player
+        db.session.add(game)
+        db.session.commit()
+    else:
+        player=Player(is_rematching=True)
+        player.is_red=not(game.player_a.is_red)
+        player.guest=Guest.query.filter_by(id=flask.session['guest_id']).one()
+        game.player_b=player
+        db.session.add(game)
+        db.session.commit()
+        data_to_send = {
+            'game_id': str(game.id)
+        }
+        flask_socketio.emit('redirect to rematch', data_to_send, room=received_json['game_id'])
+
+    
     # print('someone joined game '+received_json['game_id'])
 
 @socketio.on('make move')

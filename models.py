@@ -73,12 +73,14 @@ class Player(db.Model):
     guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=True)
     is_red = db.Column(db.Boolean, nullable=False)
     is_inviter = db.Column(db.Boolean, nullable=True)
+    is_rematching = db.Column(db.Boolean, nullable=True)
 
     guest = db.relationship('Guest')
 
-    def __init__(self, is_inviter=False, **kwargs):
+    def __init__(self, is_inviter=False, is_rematching=False, **kwargs):
         super(Player, self).__init__(**kwargs)
         self.is_inviter=is_inviter
+        self.is_rematching=is_rematching
 
     def set_random_color(self):
         random.seed()

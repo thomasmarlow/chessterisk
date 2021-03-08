@@ -3,15 +3,19 @@
 {% block content %}
 <!-- Page Content -->
 <div id="board-bg" class="d-flex justify-content-center align-items-center" style="height: calc(100% - 56px); width: 100%; z-index: -1; flex-direction: column; position: fixed;">
-  <div id="board-info-display" class="alert alert-light" role="alert">
-    {% if winner %}
+  <div id="board-top-row" class="row">
+    <div id="board-info-display" class="alert alert-light" role="alert">
+      {% if winner %}
       game ended; {{ winner }} won
-    {% elif is_inviter %}
+      {% elif is_rematching %}
+      rematch game started
+      {% elif is_inviter %}
       share your url with your friend
-    {% else %}
+      {% else %}
       entered game by invitation
-    {% endif %}
-  </div>
+      {% endif %}
+    </div>
+  </div> 
   <div id="board-main" class="shadow-lg py-2 px-4 mb-5" data-color="{{ color }}" data-game-id="{{ game_id }}" data-winner="{{ winner }}" data-is-viewer="{{ is_viewer }}">
     <div class="row justify-content-center">
       <div class="col-auto m-0 p-1">

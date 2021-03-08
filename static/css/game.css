@@ -14,8 +14,11 @@
 
 #board-info-display {
     /* font-size: 4vmin; */
-    line-height: 4vmin;
+    line-height: 5vmin;
+    /* font-size: min(5vmin, 4vh); */
     font-size: min(5vmin, 4vh);
+    min-height: min(10vmin, 52px);
+    max-height: min(10vmin, 52px);
 }
 
 .grad-blue-bottom {
