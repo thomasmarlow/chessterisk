@@ -2,7 +2,7 @@
 
 {% block content %}
 <!-- Page Content -->
-<div id="board-bg" class="d-flex justify-content-center align-items-center" style="height: calc(100vh - 56px); flex-direction: column;">
+<div id="board-bg" class="d-flex justify-content-center align-items-center" style="height: calc(100% - 56px); width: 100%; z-index: -1; flex-direction: column; position: fixed;">
   <div id="board-info-display" class="alert alert-dark" role="alert">
     {% if winner %}
       game ended; {{ winner }} won
