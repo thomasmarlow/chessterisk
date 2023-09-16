@@ -1,7 +1,7 @@
 # chessterisk*
 *"A chess-like RNG-based online board game."*
 
-Currently running on https://chessterisk.herokuapp.com/
+Currently running on https://chessterisk.thomasmarlow.online/
 
 ## TODOs:
 
