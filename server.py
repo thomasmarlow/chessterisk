@@ -3,6 +3,7 @@ import flask_socketio
 
 import os
 import flask_sqlalchemy
+from flask_migrate import Migrate
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from uuid import UUID
 
@@ -15,12 +16,13 @@ app = flask.Flask(__name__)
 if os.getenv("DATABASE_URL"):
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://chessterisk:chessterisk@localhost:5432/chessterisk'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://chessterisk:chessterisk@db:5432/chessterisk'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/' # TODO: randomize
 
 db.init_app(app)
+migrate = Migrate(app, db)
 socketio = flask_socketio.SocketIO(app)
 
 @app.route('/home', methods=['GET'])
